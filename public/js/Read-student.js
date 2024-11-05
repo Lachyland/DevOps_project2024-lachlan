@@ -15,7 +15,10 @@ function fetchAndDisplayStudents() {
                                 <td>${student.adminNumber}</td>
                                 <td>${student.name}</td>
                                 <td>${student.diploma}</td>
-                                <td>${student.cGPA}</td> <!-- Directly use cGPA here -->
+                                <td>${student.cGPA}</td>
+                                <td>
+                                    <button class="btn btn-primary" onclick="updateStudent('${student._id}')">Update</button>
+                                </td>
                              </tr>`;
                 });
 

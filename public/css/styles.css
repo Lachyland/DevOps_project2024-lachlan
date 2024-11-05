@@ -49,3 +49,13 @@
     color: green;
     font-weight: bold;
 }
+
+.banner {
+    background-color: #004085; /* Bootstrap primary color */
+    color: white; /* Text color */
+    padding: 20px; /* Padding for spacing */
+    border-radius: 0; /* No rounded corners for a full-width effect */
+    margin-bottom: 20px; /* Space below the banner */
+}
+
+

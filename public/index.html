@@ -1,21 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Resources</title>
+    <title>Student Management</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css">
     <link rel="stylesheet" href="css/styles.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js" defer></script>
     <script src="js/add-student.js" defer></script>
     <script src="js/Read-student.js" defer></script>
 </head>
-<body onload="fetchAndDisplayStudents()">
-    <div class="container mt-5">
-        <h2 class="mb-4">Student Resources</h2>
 
+<body onload="fetchAndDisplayStudents()">
+    <div class="container-fluid banner text-center">
+        <h2>Student Management</h2>
+    </div>
+
+    <div class="container mt-5">
         <!-- Updated button with Bootstrap 5 data-bs-toggle attributes -->
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#studentModal">
+        <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#studentModal">
             Add Student
         </button>
 
@@ -61,14 +65,17 @@
                                 <option value="Common ICT Programme">Common ICT Programme</option>
                                 <option value="Applied Artificial Intelligence">Applied Artificial Intelligence</option>
                                 <option value="Big Data & Analytics">Big Data & Analytics</option>
-                                <option value="Cybersecurity & Digital Forensics">Cybersecurity & Digital Forensics</option>
-                                <option value="Immersive Media & Game Development">Immersive Media & Game Development</option>
+                                <option value="Cybersecurity & Digital Forensics">Cybersecurity & Digital Forensics
+                                </option>
+                                <option value="Immersive Media & Game Development">Immersive Media & Game Development
+                                </option>
                                 <option value="Information Technology">Information Technology</option>
                             </select>
                         </div>
                         <div class="mb-3">
                             <label for="cgpa" class="form-label">cGPA</label>
-                            <input type="number" class="form-control" id="cgpa" placeholder="Enter cGPA" min="0.0" max="4.0" step="0.1">
+                            <input type="number" class="form-control" id="cgpa" placeholder="Enter cGPA" min="0.0"
+                                max="4.0" step="0.1">
                         </div>
                         <p align="right" id="message" class=""></p>
                     </form>
@@ -81,4 +88,5 @@
         </div>
     </div>
 </body>
+
 </html>

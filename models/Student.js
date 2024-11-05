@@ -5,5 +5,7 @@ const studentSchema = new mongoose.Schema({
     name: { type: String, required: true },
     diploma: { type: String, required: true },
     cGPA: { type: mongoose.Schema.Types.Decimal128, required: true },
-module.exports = mongoose.model('Student', studentSchema);
+
 }, { versionKey: false });
+
+module.exports = mongoose.model('Student', studentSchema);

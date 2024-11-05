@@ -48,4 +48,20 @@ const server = app.listen(PORT, function () {
     console.log(`Demo project at: ${baseUrl}`);
 });
 
+
+const updateStudent = require('./utils/update-student-util'); // Adjust path as needed
+
+app.put('/update-student/:id', async (req, res) => {
+    const { id } = req.params;
+    const { adminNumber, name, diploma, cGPA } = req.body;
+
+    try {
+        const updatedStudent = await updateStudent(id, { adminNumber, name, diploma, cGPA });
+        res.json({ message: 'Resource updated successfully', student: updatedStudent });
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).json({ message: error.message });
+    }
+});
+
 module.exports = { app, server };

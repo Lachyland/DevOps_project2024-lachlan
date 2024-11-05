@@ -1,7 +1,7 @@
 var express = require('express')
 var bodyParser = require("body-parser");
 var app = express();
-
+const cors = require('cors')
 const mongoose = require('mongoose');
 require('dotenv').config();
 const PORT = process.env.PORT || 5050
@@ -10,6 +10,10 @@ mongoose.set('strictQuery', true);
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(express.static("./public"));
+app.use(cors())
+
+const { addStudent } = require('./utils/add-studentUtil')
+app.post('/add-student', addStudent);
 
 app.get('/', (req, res) => {
     res.sendFile(__dirname + "/public/" + startPage);

@@ -1,8 +1,31 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<title>DVOPS Projects</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Resources</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css">
+    <script src="js/Read-student.js" defer></script>
 </head>
-<body>
-Good luck lachlan, nasier, taha
+<body onload ="fetchAndDisplayStudents()">
+    <div class="container mt-5">
+        <h2 class="mb-4">Student Resources</h2>
+        
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Admin Number</th>
+                    <th>Name</th>
+                    <th>Diploma</th>
+                    <th>cGPA</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="tableContent">
+                <!-- Student data will be populated here -->
+            </tbody>
+        </table>
+    </div>
 </body>
 </html>

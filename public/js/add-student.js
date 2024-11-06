@@ -46,15 +46,25 @@ function addStudent() {
 function previewImage(event) {
     const imagePreview = document.getElementById("imagePreview");
     const file = event.target.files[0];
-    
+
     if (file) {
         const reader = new FileReader();
-        reader.onload = function(e) {
-            imagePreview.src = e.target.result; // Set the image preview source to the Base64 string
-            imagePreview.style.display = "block"; // Make the image visible
+        reader.onload = function (e) {
+            const img = new Image();
+            img.onload = function () {
+                if (img.width !== img.height) {
+                    alert("The image must be square!");
+                    imagePreview.style.display = "none";
+                    document.getElementById("studentImage").value = "";
+                } else {
+                    imagePreview.src = e.target.result;
+                    imagePreview.style.display = "block";
+                }
+            };
+            img.src = e.target.result;
         };
-        reader.readAsDataURL(file); // Convert the file to Base64
+        reader.readAsDataURL(file);
     } else {
-        imagePreview.style.display = "none"; // Hide the image if no file is selected
+        imagePreview.style.display = "none"; 
     }
 }

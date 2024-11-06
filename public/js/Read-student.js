@@ -10,10 +10,15 @@ function fetchAndDisplayStudents() {
 
                 // Build the table rows with student data
                 students.forEach((student, index) => {
+                    const imageUrl = student.image || 'data:image/png;base64,defaultBase64String'; // Provide a fallback base64 image if none exists
+
                     html += `<tr>
                                 <td>${index + 1}</td>
                                 <td>${student.adminNumber}</td>
-                                <td>${student.name}</td>
+                                <td>
+                                    <img src="${imageUrl}" alt="Student Photo" style="width: 50px; height: 50px; object-fit: cover; border-radius: 50%; margin-right: 10px;">
+                                    ${student.name}
+                                </td>
                                 <td>${student.diploma}</td>
                                 <td>${student.cGPA}</td>
                                 <td>
@@ -38,6 +43,3 @@ function fetchAndDisplayStudents() {
 
     xhr.send();
 }
-
-// Ensure function runs on DOM load
-document.addEventListener("DOMContentLoaded", fetchAndDisplayStudents);

@@ -42,43 +42,62 @@
 
     <!-- Updated modal attributes for Bootstrap 5 -->
     <div class="modal fade" id="studentModal" tabindex="-1" aria-labelledby="studentModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-lg"> <!-- Add 'modal-lg' to make the modal larger -->
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="studentModalLabel">Add New Students</h5>
+                    <h5 class="modal-title" id="studentModalLabel">Add New Student</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form>
-                        <div class="mb-3">
-                            <label for="adminnumber" class="form-label">Admin Number</label>
-                            <input type="text" class="form-control" id="adminnumber" placeholder="Enter admin number">
+                    <div class="row">
+                        <!-- Form Section -->
+                        <div class="col-md-8">
+                            <form>
+                                <div class="mb-3">
+                                    <label for="adminnumber" class="form-label">Admin Number</label>
+                                    <input type="text" class="form-control" id="adminnumber"
+                                        placeholder="Enter admin number">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="name" class="form-label">Name</label>
+                                    <input type="text" class="form-control" id="name" placeholder="Enter name">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="diploma" class="form-label">Diploma</label>
+                                    <select class="form-select" id="diploma">
+                                        <option selected disabled>Select diploma</option>
+                                        <option value="Common ICT Programme">Common ICT Programme</option>
+                                        <option value="Applied Artificial Intelligence">Applied Artificial Intelligence
+                                        </option>
+                                        <option value="Big Data & Analytics">Big Data & Analytics</option>
+                                        <option value="Cybersecurity & Digital Forensics">Cybersecurity & Digital
+                                            Forensics</option>
+                                        <option value="Immersive Media & Game Development">Immersive Media & Game
+                                            Development</option>
+                                        <option value="Information Technology">Information Technology</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="cgpa" class="form-label">cGPA</label>
+                                    <input type="number" class="form-control" id="cgpa" placeholder="Enter cGPA"
+                                        min="0.0" max="4.0" step="0.1">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="studentImage" class="form-label">Upload Image</label>
+                                    <input type="file" class="form-control" id="studentImage" accept="image/*"
+                                        onchange="previewImage(event)">
+                                </div>
+                                <p align="right" id="message" class=""></p>
+                            </form>
                         </div>
-                        <div class="mb-3">
-                            <label for="name" class="form-label">Name</label>
-                            <input type="text" class="form-control" id="name" placeholder="Enter name">
+
+                        <!-- Image Preview Section -->
+                        <div class="col-md-4 d-flex align-items-center justify-content-center">
+                            <div class="image-preview-container">
+                                <img id="imagePreview" src="#" alt="Image Preview" style="display: none;">
+                            </div>
                         </div>
-                        <div class="mb-3">
-                            <label for="diploma" class="form-label">Diploma</label>
-                            <select class="form-select" id="diploma">
-                                <option selected disabled>Select diploma</option>
-                                <option value="Common ICT Programme">Common ICT Programme</option>
-                                <option value="Applied Artificial Intelligence">Applied Artificial Intelligence</option>
-                                <option value="Big Data & Analytics">Big Data & Analytics</option>
-                                <option value="Cybersecurity & Digital Forensics">Cybersecurity & Digital Forensics
-                                </option>
-                                <option value="Immersive Media & Game Development">Immersive Media & Game Development
-                                </option>
-                                <option value="Information Technology">Information Technology</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="cgpa" class="form-label">cGPA</label>
-                            <input type="number" class="form-control" id="cgpa" placeholder="Enter cGPA" min="0.0"
-                                max="4.0" step="0.1">
-                        </div>
-                        <p align="right" id="message" class=""></p>
-                    </form>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

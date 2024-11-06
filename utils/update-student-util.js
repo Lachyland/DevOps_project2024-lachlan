@@ -1,12 +1,12 @@
 const Student = require('../models/Student'); // Adjust the path if necessary
 
-async function updateStudentByAdminNumber(adminNumber, studentData) {
-    const { name, diploma, cGPA } = studentData;
+async function updateStudent(adminNumber, studentData) {
+    const { name, diploma, cGPA, image } = studentData;
 
     try {
         const student = await Student.findOneAndUpdate(
             { adminNumber }, // Find by adminNumber
-            { name, diploma, cGPA }, // Update fields
+            { name, diploma, cGPA, image }, // Update fields, including image
             { new: true } // Return the updated document
         );
 
@@ -20,10 +20,11 @@ async function updateStudentByAdminNumber(adminNumber, studentData) {
             name: student.name,
             diploma: student.diploma,
             cGPA: student.cGPA ? student.cGPA.toString() : null,
+            image: student.image,
         };
     } catch (error) {
         throw new Error(`Error updating resource: ${error.message}`);
     }
 }
 
-module.exports = updateStudentByAdminNumber;
+module.exports = updateStudent;

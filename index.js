@@ -49,13 +49,13 @@ const server = app.listen(PORT, function () {
 });
 
 
-const updateStudentByAdminNumber = require('./utils/update-student-util');
+const updateStudent = require('./utils/update-student-util');
 
 app.put('/update-student', async (req, res) => {
     const { adminNumber, name, diploma, cGPA } = req.body;
 
     try {
-        const updatedStudent = await updateStudentByAdminNumber(adminNumber, { name, diploma, cGPA });
+        const updatedStudent = await updateStudent(adminNumber, { name, diploma, cGPA });
         res.json({ message: 'Resource updated successfully', student: updatedStudent });
     } catch (error) {
         console.error(error.message);

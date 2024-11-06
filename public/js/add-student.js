@@ -8,6 +8,12 @@ function addStudent() {
     };
     const imageFile = document.getElementById("studentImage").files[0];
 
+    if (!imageFile) {
+        document.getElementById("message").innerHTML = 'Image is required!';
+        document.getElementById("message").setAttribute("class", "text-danger");
+        return;
+    }
+
     if (jsonData.adminNumber === "" || jsonData.name === "" || jsonData.diploma === "" || jsonData.cGPA === "") {
         document.getElementById("message").innerHTML = 'All fields are required!';
         document.getElementById("message").setAttribute("class", "text-danger");

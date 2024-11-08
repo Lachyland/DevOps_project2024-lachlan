@@ -18,15 +18,48 @@
     </div>
 
     <div class="container mt-5">
-        <!-- Updated button with Bootstrap 5 data-bs-toggle attributes -->
+        <!-- Button to add a new student -->
         <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#studentModal">
             Add Student
         </button>
 
+        <!-- Search and Filter Section -->
+        <div class="container mt-3">
+            <div class="row mb-3">
+                <!-- Search by name -->
+                <div class="col-md-4">
+                    <input type="text" id="searchName" class="form-control" placeholder="Search by name" oninput="filterStudents()">
+                </div>
+
+                <!-- Sort by cGPA -->
+                <div class="col-md-4">
+                    <select id="sortCGPA" class="form-select" onchange="filterStudents()">
+                        <option value="">Sort by cGPA</option>
+                        <option value="desc">Highest to Lowest</option>
+                        <option value="asc">Lowest to Highest</option>
+                    </select>
+                </div>
+
+                <!-- Filter by Diploma -->
+                <div class="col-md-4">
+                    <select id="filterDiploma" class="form-select" onchange="filterStudents()">
+                        <option value="">Filter by Diploma</option>
+                        <option value="Common ICT Programme">Common ICT Programme</option>
+                        <option value="Applied Artificial Intelligence">Applied Artificial Intelligence</option>
+                        <option value="Big Data & Analytics">Big Data & Analytics</option>
+                        <option value="Cybersecurity & Digital Forensics">Cybersecurity & Digital Forensics</option>
+                        <option value="Immersive Media & Game Development">Immersive Media & Game Development</option>
+                        <option value="Information Technology">Information Technology</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Student Table -->
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th>#</th>
+                    <th>Number</th>
                     <th>Admin Number</th>
                     <th>Name</th>
                     <th>Diploma</th>
@@ -40,9 +73,9 @@
         </table>
     </div>
 
-    <!-- Updated modal attributes for Bootstrap 5 -->
+    <!-- Modal for Adding New Student -->
     <div class="modal fade" id="studentModal" tabindex="-1" aria-labelledby="studentModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg"> <!-- Add 'modal-lg' to make the modal larger -->
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="studentModalLabel">Add New Student</h5>
@@ -55,8 +88,7 @@
                             <form>
                                 <div class="mb-3">
                                     <label for="adminnumber" class="form-label">Admin Number</label>
-                                    <input type="text" class="form-control" id="adminnumber"
-                                        placeholder="Enter admin number">
+                                    <input type="text" class="form-control" id="adminnumber" placeholder="Enter admin number">
                                 </div>
                                 <div class="mb-3">
                                     <label for="name" class="form-label">Name</label>
@@ -67,25 +99,20 @@
                                     <select class="form-select" id="diploma">
                                         <option selected disabled>Select diploma</option>
                                         <option value="Common ICT Programme">Common ICT Programme</option>
-                                        <option value="Applied Artificial Intelligence">Applied Artificial Intelligence
-                                        </option>
+                                        <option value="Applied Artificial Intelligence">Applied Artificial Intelligence</option>
                                         <option value="Big Data & Analytics">Big Data & Analytics</option>
-                                        <option value="Cybersecurity & Digital Forensics">Cybersecurity & Digital
-                                            Forensics</option>
-                                        <option value="Immersive Media & Game Development">Immersive Media & Game
-                                            Development</option>
+                                        <option value="Cybersecurity & Digital Forensics">Cybersecurity & Digital Forensics</option>
+                                        <option value="Immersive Media & Game Development">Immersive Media & Game Development</option>
                                         <option value="Information Technology">Information Technology</option>
                                     </select>
                                 </div>
                                 <div class="mb-3">
                                     <label for="cgpa" class="form-label">cGPA</label>
-                                    <input type="number" class="form-control" id="cgpa" placeholder="Enter cGPA"
-                                        min="0.0" max="4.0" step="0.1">
+                                    <input type="number" class="form-control" id="cgpa" placeholder="Enter cGPA" min="0.0" max="4.0" step="0.1">
                                 </div>
                                 <div class="mb-3">
                                     <label for="studentImage" class="form-label">Upload Image</label>
-                                    <input type="file" class="form-control" id="studentImage" accept="image/*"
-                                        onchange="previewImage(event)">
+                                    <input type="file" class="form-control" id="studentImage" accept="image/*" onchange="previewImage(event)">
                                 </div>
                                 <p align="right" id="message" class=""></p>
                             </form>
@@ -106,6 +133,7 @@
             </div>
         </div>
     </div>
+
 </body>
 
 </html>

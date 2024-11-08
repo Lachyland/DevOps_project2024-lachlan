@@ -48,7 +48,6 @@ const server = app.listen(PORT, function () {
     console.log(`Demo project at: ${baseUrl}`);
 });
 
-
 const updateStudent = require('./utils/update-student-util'); // Adjust path as needed
 
 app.put('/update-student/:id', async (req, res) => {

@@ -8,14 +8,26 @@ function addStudent() {
     };
     const imageFile = document.getElementById("studentImage").files[0];
 
+    if (jsonData.adminNumber === "" || jsonData.name === "" || jsonData.diploma === "" || jsonData.cGPA === "") {
+        document.getElementById("message").innerHTML = 'All fields are required!';
+        document.getElementById("message").setAttribute("class", "text-danger");
+        return;
+    }
+
     if (!imageFile) {
         document.getElementById("message").innerHTML = 'Image is required!';
         document.getElementById("message").setAttribute("class", "text-danger");
         return;
     }
 
-    if (jsonData.adminNumber === "" || jsonData.name === "" || jsonData.diploma === "" || jsonData.cGPA === "") {
-        document.getElementById("message").innerHTML = 'All fields are required!';
+    if (jsonData.adminNumber.length !== 8) {
+        document.getElementById("message").innerHTML = 'Admin number must be exactly 8 characters!';
+        document.getElementById("message").setAttribute("class", "text-danger");
+        return;
+    }
+
+    if (parseFloat(jsonData.cGPA) >= 4.1) {
+        document.getElementById("message").innerHTML = 'cGPA must be below 4.0!';
         document.getElementById("message").setAttribute("class", "text-danger");
         return;
     }
@@ -40,7 +52,7 @@ function addStudent() {
                 document.getElementById("studentImage").value = "";
                 window.location.href = 'index.html';
             } else {
-                document.getElementById("message").innerHTML = 'Unable to add student!';
+                document.getElementById("message").innerHTML = 'Unable to add student! Admin Number already exists.';
                 document.getElementById("message").setAttribute("class", "text-danger");
             }
         };
@@ -54,22 +66,29 @@ function previewImage(event) {
     const file = event.target.files[0];
 
     if (file) {
-        const reader = new FileReader();
-        reader.onload = function (e) {
-            const img = new Image();
-            img.onload = function () {
-                if (img.width !== img.height) {
-                    alert("The image must be square!");
-                    imagePreview.style.display = "none";
-                    document.getElementById("studentImage").value = "";
-                } else {
-                    imagePreview.src = e.target.result;
-                    imagePreview.style.display = "block";
-                }
+        // Check if the file size is more than 50KB (50 * 1024 bytes)
+        if (file.size > 50 * 1024) {
+            alert("The image size exceeds 50KB. Please upload a smaller image.");
+            imagePreview.style.display = "none";
+            document.getElementById("studentImage").value = ""; // Reset the file input
+        } else {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const img = new Image();
+                img.onload = function () {
+                    if (img.width !== img.height) {
+                        alert("The image must be square!");
+                        imagePreview.style.display = "none";
+                        document.getElementById("studentImage").value = "";
+                    } else {
+                        imagePreview.src = e.target.result;
+                        imagePreview.style.display = "block";
+                    }
+                };
+                img.src = e.target.result;
             };
-            img.src = e.target.result;
-        };
-        reader.readAsDataURL(file);
+            reader.readAsDataURL(file);
+        }
     } else {
         imagePreview.style.display = "none"; 
     }

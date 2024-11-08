@@ -14,6 +14,24 @@ function addStudent() {
         return;
     }
 
+    if (!imageFile) {
+        document.getElementById("message").innerHTML = 'Image is required!';
+        document.getElementById("message").setAttribute("class", "text-danger");
+        return;
+    }
+
+    if (jsonData.adminNumber.length !== 8) {
+        document.getElementById("message").innerHTML = 'Admin number must be exactly 8 characters!';
+        document.getElementById("message").setAttribute("class", "text-danger");
+        return;
+    }
+
+    if (parseFloat(jsonData.cGPA) >= 4.1) {
+        document.getElementById("message").innerHTML = 'cGPA must be below 4.0!';
+        document.getElementById("message").setAttribute("class", "text-danger");
+        return;
+    }
+
     const reader = new FileReader();
     reader.onloadend = function () {
         jsonData.image = reader.result; // Image in Base64
@@ -34,7 +52,7 @@ function addStudent() {
                 document.getElementById("studentImage").value = "";
                 window.location.href = 'index.html';
             } else {
-                document.getElementById("message").innerHTML = 'Unable to add student!';
+                document.getElementById("message").innerHTML = 'Unable to add student! Admin Number already exists.';
                 document.getElementById("message").setAttribute("class", "text-danger");
             }
         };
@@ -46,15 +64,32 @@ function addStudent() {
 function previewImage(event) {
     const imagePreview = document.getElementById("imagePreview");
     const file = event.target.files[0];
-    
+
     if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            imagePreview.src = e.target.result; // Set the image preview source to the Base64 string
-            imagePreview.style.display = "block"; // Make the image visible
-        };
-        reader.readAsDataURL(file); // Convert the file to Base64
+        // Check if the file size is more than 50KB (50 * 1024 bytes)
+        if (file.size > 50 * 1024) {
+            alert("The image size exceeds 50KB. Please upload a smaller image.");
+            imagePreview.style.display = "none";
+            document.getElementById("studentImage").value = ""; // Reset the file input
+        } else {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const img = new Image();
+                img.onload = function () {
+                    if (img.width !== img.height) {
+                        alert("The image must be square!");
+                        imagePreview.style.display = "none";
+                        document.getElementById("studentImage").value = "";
+                    } else {
+                        imagePreview.src = e.target.result;
+                        imagePreview.style.display = "block";
+                    }
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
     } else {
-        imagePreview.style.display = "none"; // Hide the image if no file is selected
+        imagePreview.style.display = "none"; 
     }
 }

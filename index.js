@@ -1,9 +1,9 @@
-// index.js
 const express = require('express');
 const bodyParser = require("body-parser");
 const mongoose = require('mongoose');
+const Student = require('./models/Student'); 
 const cors = require('cors');
-const { readStudent } = require('./utils/read-util.js'); // Import the readStudent function
+const { readStudent } = require('./utils/read-util.js');
 require('dotenv').config();
 
 const app = express();
@@ -14,16 +14,15 @@ mongoose.set('strictQuery', true);
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-const { addStudent } = require('./utils/add-studentUtil')
+const { addStudent } = require('./utils/add-studentUtil');
 app.post('/add-student', addStudent);
 
 app.get('/', (req, res) => {
     res.sendFile(__dirname + "/public/" + startPage);
-})
+});
 
 app.use(express.static("public"));
 app.use(cors()); // Enable CORS
-
 
 // Connect to MongoDB
 mongoose.connect(process.env.DB_CONNECT)
@@ -49,17 +48,31 @@ app.delete('/delete-student/:id', deleteStudent); // Use delete function for del
 // Set up the route for updating student data
 const updateStudent = require('./utils/update-student-util'); // Adjust path as needed
 app.put('/update-student', async (req, res) => {
-
-    const { adminNumber, name, diploma, cGPA } = req.body;
-
     try {
-        const updatedStudent = await updateStudent(adminNumber, { name, diploma, cGPA });
-        res.json({ message: 'Resource updated successfully', student: updatedStudent });
+        const { adminNumber, name, diploma, cGPA, image } = req.body;
+
+        // Log the data received
+        console.log('Received update for student:', { adminNumber, name, diploma, cGPA, image });
+
+        // Update the student record in the database
+        const updatedStudent = await Student.findOneAndUpdate(
+            { adminNumber },
+            { name, diploma, cGPA, image },
+            { new: true }
+        );
+
+        if (!updatedStudent) {
+            return res.status(404).json({ message: 'Student not found' });
+        }
+
+        // Send success message upon successful update
+        res.json({ message: 'Student updated successfully', student: updatedStudent });
     } catch (error) {
         console.error(error.message);
-        res.status(500).json({ message: error.message });
+        res.status(500).json({ message: 'Error updating student: ' + error.message });
     }
 });
+
 
 // Start the server
 const server = app.listen(PORT, function () {

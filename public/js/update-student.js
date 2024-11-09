@@ -13,6 +13,24 @@ function updateStudent() {
     return;
     }
 
+    if (!imageFile) {
+        document.getElementById("message").innerHTML = 'Image is required!';
+        document.getElementById("message").setAttribute("class", "text-danger");
+        return;
+    }
+
+    if (jsonData.adminNumber.length !== 8) {
+        document.getElementById("message").innerHTML = 'Admin number must be exactly 8 characters!';
+        document.getElementById("message").setAttribute("class", "text-danger");
+        return;
+    }
+
+    if (parseFloat(jsonData.cGPA) >= 4.1) {
+        document.getElementById("message").innerHTML = 'cGPA must be below 4.0!';
+        document.getElementById("message").setAttribute("class", "text-danger");
+        return;
+    }
+
     var request = new XMLHttpRequest();
 
     request.open("PUT", "/update-student", true);
@@ -22,7 +40,7 @@ function updateStudent() {
         response = JSON.parse(request.responseText);
         console.log(response)
         if (response.message == undefined) {
-            document.getElementById("message").innerHTML = 'Updated Resource: ' +
+            document.getElementById("message").innerHTML = 'Updated student: ' +
     jsonData.name + '!';
             document.getElementById("message").setAttribute("class", "text-success");
             document.getElementById("adminNumber").value = "";
@@ -32,7 +50,7 @@ function updateStudent() {
             window.location.href = 'index.html';
         }
         else {
-            document.getElementById("message").innerHTML = 'Unable to add resource!'; 
+            document.getElementById("message").innerHTML = 'Unable to update student!'; 
             document.getElementById("message").setAttribute("class", "text-danger");
             document.getElementById("message").setAttribute("class", "text-danger");
         }

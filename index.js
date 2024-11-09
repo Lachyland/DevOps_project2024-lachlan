@@ -48,12 +48,12 @@ app.delete('/delete-student/:id', deleteStudent); // Use delete function for del
 
 // Set up the route for updating student data
 const updateStudent = require('./utils/update-student-util'); // Adjust path as needed
-app.put('/update-student/:id', async (req, res) => {
-    const { id } = req.params;
+app.put('/update-student', async (req, res) => {
+
     const { adminNumber, name, diploma, cGPA } = req.body;
 
     try {
-        const updatedStudent = await updateStudent(id, { adminNumber, name, diploma, cGPA });
+        const updatedStudent = await updateStudent(adminNumber, { name, diploma, cGPA });
         res.json({ message: 'Resource updated successfully', student: updatedStudent });
     } catch (error) {
         console.error(error.message);

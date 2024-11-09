@@ -1,14 +1,13 @@
-// update-student-util.js
-const Student = require('../models/Student'); // Adjust the path as necessary
+const Student = require('../models/Student'); // Adjust the path if necessary
 
-async function updateStudent(id, studentData) {
-    const { adminNumber, name, diploma, cGPA } = studentData;
+async function updateStudent(adminNumber, studentData) {
+    const { name, diploma, cGPA, image } = studentData;
 
     try {
-        const student = await Student.findByIdAndUpdate(
-            id,
-            { adminNumber, name, diploma, cGPA },
-            { new: true }
+        const student = await Student.findOneAndUpdate(
+            { adminNumber }, // Find by adminNumber
+            { name, diploma, cGPA, image }, // Update fields, including image
+            { new: true } // Return the updated document
         );
 
         if (!student) {
@@ -21,6 +20,7 @@ async function updateStudent(id, studentData) {
             name: student.name,
             diploma: student.diploma,
             cGPA: student.cGPA ? student.cGPA.toString() : null,
+            image: student.image,
         };
     } catch (error) {
         throw new Error(`Error updating resource: ${error.message}`);

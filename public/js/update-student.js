@@ -35,23 +35,37 @@ function updateStudent() {
         return;
     }
 
-    // Prepare image as a base64 string using FileReader
+    // Check image file validation if new image is selected
     if (imageFile) {
+        // Check file size (not more than 50KB)
+        if (imageFile.size > 50 * 1024) {
+            document.getElementById("editMessage").innerHTML = 'The image size exceeds 50KB. Please upload a smaller image.';
+            document.getElementById("editMessage").setAttribute("class", "text-danger");
+            return;
+        }
+
+        // Check if the image is square
         const reader = new FileReader();
-        reader.onloadend = function () {
-            // When file is read, use the base64 string
-            jsonData.image = reader.result;
+        reader.onload = function () {
+            const img = new Image();
+            img.onload = function () {
+                if (img.width !== img.height) {
+                    document.getElementById("editMessage").innerHTML = 'The image must be square!';
+                    document.getElementById("editMessage").setAttribute("class", "text-danger");
+                    return;
+                }
 
-            // Now send the data to the server
-            sendUpdateRequest(jsonData);
+                // Proceed with sending the data if validation passes
+                jsonData.image = reader.result; // Base64 image data
+                sendUpdateRequest(jsonData); // Call function to send data to server
+            };
+            img.src = reader.result;
         };
-        reader.readAsDataURL(imageFile); // Read the image as a base64 string
+        reader.readAsDataURL(imageFile); // Read the image as base64 string
     } else {
-        // If no image, send the existing image URL or a placeholder
+        // If no new image, send the existing image URL or a placeholder
         jsonData.image = document.getElementById('editImagePreview').src || "";
-
-        // Now send the data to the server
-        sendUpdateRequest(jsonData);
+        sendUpdateRequest(jsonData); // Call function to send data to server
     }
 }
 

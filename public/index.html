@@ -10,6 +10,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js" defer></script>
     <script src="js/add-student.js" defer></script>
     <script src="js/Read-student.js" defer></script>
+    <script src="js/delete-student.js" defer></script>
+    <script src="js/update-student.js" defer></script>
+
 </head>
 
 <body onload="fetchAndDisplayStudents()">
@@ -133,6 +136,59 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal for Editing Student -->
+<div class="modal fade" id="editStudentModal" tabindex="-1" aria-labelledby="editStudentModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editStudentModalLabel">Edit Student</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="mb-3">
+                        <label for="editAdminNumber" class="form-label">Admin Number</label>
+                        <input type="text" class="form-control" id="editAdminNumber" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editName" class="form-label">Name</label>
+                        <input type="text" class="form-control" id="editName">
+                    </div>
+                    <div class="mb-3">
+                        <label for="editDiploma" class="form-label">Diploma</label>
+                        <select class="form-select" id="editDiploma">
+                            <option value="Common ICT Programme">Common ICT Programme</option>
+                            <option value="Applied Artificial Intelligence">Applied Artificial Intelligence</option>
+                            <option value="Big Data & Analytics">Big Data & Analytics</option>
+                            <option value="Cybersecurity & Digital Forensics">Cybersecurity & Digital Forensics</option>
+                            <option value="Immersive Media & Game Development">Immersive Media & Game Development</option>
+                            <option value="Information Technology">Information Technology</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editCGPA" class="form-label">cGPA</label>
+                        <input type="number" class="form-control" id="editCGPA" min="0.0" max="4.0" step="0.1">
+                    </div>
+                    <div class="mb-3">
+                        <label for="editStudentImage" class="form-label">Upload New Image</label>
+                        <input type="file" class="form-control" id="editStudentImage" accept="image/*" onchange="previewEditImage(event)">
+                    </div>
+                    <p id="editMessage" class=""></p>
+                </form>
+                <!-- Image Preview -->
+                <div class="image-preview-container">
+                    <img id="editImagePreview" src="#" alt="Image Preview" style="display: none;">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="updateStudent()">Update Student</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 </body>
 

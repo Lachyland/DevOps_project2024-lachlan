@@ -27,7 +27,7 @@ function addStudent() {
     }
 
     if (parseFloat(jsonData.cGPA) >= 4.1) {
-        document.getElementById("message").innerHTML = 'cGPA must be below 4.0!';
+        document.getElementById("message").innerHTML = 'cGPA must be below 4.1!';
         document.getElementById("message").setAttribute("class", "text-danger");
         return;
     }

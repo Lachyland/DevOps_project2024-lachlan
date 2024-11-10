@@ -44,6 +44,7 @@ function filterStudents() {
     displayStudents(filteredStudents); // Display the filtered and sorted students
 }
 
+// public/js/Read-student.js
 function displayStudents(students) {
     let html = "";
 
@@ -60,10 +61,13 @@ function displayStudents(students) {
                     <td>${student.diploma}</td>
                     <td>${student.cGPA}</td>
                     <td>
-                        <button class="btn btn-primary" onclick="updateStudent('${student._id}')">Update</button>
+                        <button class="btn btn-primary" onclick="openEditModal('${student.adminNumber}', '${student.name}', '${student.diploma}', '${student.cGPA}', '${imageUrl}')">Update</button>
+                        <button class="btn btn-danger" onclick="deleteStudent('${student._id}')">Delete</button>
                     </td>
                  </tr>`;
     });
 
     document.getElementById('tableContent').innerHTML = html;
 }
+
+

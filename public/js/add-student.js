@@ -32,6 +32,11 @@ function addStudent() {
         return;
     }
 
+    const confirmAdd = confirm("Are you sure you want to add this student?");
+    if (!confirmAdd) {
+        return; // If the user cancels, stop the function
+    }
+
     const reader = new FileReader();
     reader.onloadend = function () {
         jsonData.image = reader.result; // Image in Base64

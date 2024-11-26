@@ -1,7 +1,7 @@
 {
-  "name": "devops_project2024",
+  "name": "devops_project2024-lachlan",
   "version": "1.0.0",
-  "description": "Lachlan, Nasier, Taha - collaboration for a Student Management System",
+  "description": "Lachlan",
   "main": "index.js",
   "scripts": {
     "backend-test": "nyc --nycrc-path .nycrc-backend mocha"

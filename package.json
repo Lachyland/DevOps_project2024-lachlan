@@ -4,7 +4,7 @@
   "description": "Lachlan",
   "main": "index.js",
   "scripts": {
-    "backend-test": "nyc --nycrc-path .nycrc-backend mocha"
+    "backend-test": "./node_modules/.bin/nyc --nycrc-path .nycrc-backend mocha"
   },
   "keywords": [],
   "author": "",

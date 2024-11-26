@@ -3,7 +3,7 @@ name: Automatic Testing for Resource Management Web App
 on:
   push:
     branches:
-      - main  # Workflow will be triggered whenever there is a push to the main branch
+      - main  # Workflow will be triggered whenever there is a push in main branch
 
 jobs:
   test:
@@ -19,14 +19,10 @@ jobs:
           node-version: 18
           
       - name: Remove existing node_modules folder from cloned project
-        run: rm -rf node_modules/*
-
-      - name: Install dependencies based on package.json
-        run: npm install
+        run: rm -rf /home/runner/work/resource-mgmt/resource-mgmt/node_modules/*
         
-      # Ensure 'nyc' has execute permissions
-      - name: Set execute permissions for nyc
-        run: chmod +x node_modules/.bin/nyc
+      - name: Install dependencies for based on package.json
+        run: npm install
         
       - name: Run tests in "tests" folder
         run: npm run backend-test

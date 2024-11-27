@@ -1,14 +1,26 @@
 let allStudents = []; // Store the full list of students for filtering
 
 function fetchAndDisplayStudents() {
+    const searchName = document.getElementById('searchName').value;
+    const sortCGPA = document.getElementById('sortCGPA').value;
+    const filterDiploma = document.getElementById('filterDiploma').value;
+
+    // Construct the query parameters
+    const params = new URLSearchParams();
+    if (searchName) params.append('name', searchName);
+    if (sortCGPA) params.append('sortCGPA', sortCGPA);
+    if (filterDiploma) params.append('diploma', filterDiploma);
+
+    const url = `/read-student?${params.toString()}`;
+
     const xhr = new XMLHttpRequest();
-    xhr.open('GET', '/read-student', true);
+    xhr.open('GET', url, true);
 
     xhr.onload = function () {
         if (xhr.status === 200) {
             try {
                 allStudents = JSON.parse(xhr.responseText); // Store all students
-                filterStudents(); // Initial display with no filters
+                displayStudents(allStudents); // Display the students
             } catch (error) {
                 console.error("Error parsing student data:", error);
             }

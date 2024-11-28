@@ -1,7 +1,7 @@
-const student = require('../models/Student');
+// utils/read-util.js
+const Student = require('../models/Student');
 
-// Function to fetch all student data with server-side filtering, sorting, and searching
-async function readStudent(req, res) {
+exports.readStudent = async (req, res) => {
     try {
         const { adminNumber, searchName, sortCGPA, filterDiploma } = req.query;
 
@@ -20,8 +20,8 @@ async function readStudent(req, res) {
             query.diploma = filterDiploma;
         }
 
-        // Fetch students from the database
-        let students = await student.find(query);
+        // Fetch students from the database based on the query
+        let students = await Student.find(query);
 
         // Apply sorting if requested
         if (sortCGPA) {
@@ -42,9 +42,7 @@ async function readStudent(req, res) {
 
         return res.status(200).json(formattedStudents);
     } catch (error) {
-        console.error("Error fetching students:", error);
+        console.error("Error fetching students:", error.message, error.stack);
         return res.status(500).json({ message: 'Server error: ' + error.message });
     }
-}
-
-module.exports = { readStudent };
+};

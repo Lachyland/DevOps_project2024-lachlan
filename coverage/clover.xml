@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1733232571166" clover="3.2.0">
-  <project timestamp="1733232571166" name="All files">
+<coverage generated="1733233294453" clover="3.2.0">
+  <project timestamp="1733233294453" name="All files">
     <metrics statements="210" coveredstatements="53" conditionals="72" coveredconditionals="21" methods="26" coveredmethods="9" elements="308" coveredelements="83" complexity="0" loc="210" ncloc="210" packages="1" files="4" classes="4"/>
     <file name="Read-student.js" path="C:\Users\GIGABYTE G5\Desktop\Devops\Individual-project-lachlan\DevOps_project2024-lachlan\public\js\Read-student.js">
       <metrics statements="62" coveredstatements="52" conditionals="24" coveredconditionals="21" methods="10" coveredmethods="9"/>
@@ -56,7 +56,7 @@
       <line num="81" count="216" type="cond" truecount="2" falsecount="0"/>
       <line num="82" count="216" type="cond" truecount="2" falsecount="0"/>
       <line num="86" count="36" type="cond" truecount="2" falsecount="0"/>
-      <line num="87" count="18" type="cond" truecount="2" falsecount="0"/>
+      <line num="87" count="22" type="cond" truecount="2" falsecount="0"/>
       <line num="90" count="36" type="stmt"/>
       <line num="91" count="36" type="stmt"/>
       <line num="96" count="51" type="stmt"/>

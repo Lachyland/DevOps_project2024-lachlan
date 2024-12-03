@@ -66,7 +66,7 @@ describe('Student Search and View Functionality', () => {
     });
   });
 
-  it('should construct query parameters when all filters are applied', () => {
+  it('should construct query parameters when filters are applied', () => {
     cy.get('#searchName').type('John Doe');
     cy.get('#sortCGPA').select('desc');
     cy.get('#filterDiploma').select('Cybersecurity & Digital Forensics');
@@ -77,23 +77,6 @@ describe('Student Search and View Functionality', () => {
       expect(url.searchParams.get('name')).to.eq('John Doe');
       expect(url.searchParams.get('sortCGPA')).to.eq('desc');
       expect(url.searchParams.get('diploma')).to.eq('Cybersecurity & Digital Forensics');
-    }).as('fetchStudents');
-
-    // Trigger the fetch
-    cy.window().then((win) => win.fetchAndDisplayStudents());
-    cy.wait('@fetchStudents');
-  });
-
-  it('should construct query parameters when some filters are applied', () => {
-    cy.get('#searchName').type('Jane');
-    cy.get('#sortCGPA').select('asc');
-
-    // Stub the XHR request to capture the URL
-    cy.intercept('GET', '/read-student*', (req) => {
-      const url = new URL(req.url, window.location.origin);
-      expect(url.searchParams.get('name')).to.eq('Jane');
-      expect(url.searchParams.get('sortCGPA')).to.eq('asc');
-      expect(url.searchParams.has('diploma')).to.be.false; // No diploma selected
     }).as('fetchStudents');
 
     // Trigger the fetch
@@ -117,7 +100,7 @@ describe('Student Search and View Functionality', () => {
     cy.wait('@fetchStudents');
   });
 
-  it('should construct URL without the "name" parameter if searchName is empty', () => {
+  it('should construct URL without "name" if searchName is empty', () => {
     cy.get('#searchName').clear(); // Ensure the input is empty
     cy.get('#sortCGPA').select('asc');
     cy.get('#filterDiploma').select('Cybersecurity & Digital Forensics');
@@ -129,11 +112,12 @@ describe('Student Search and View Functionality', () => {
       expect(url.searchParams.get('diploma')).to.eq('Cybersecurity & Digital Forensics');
     }).as('fetchStudents');
 
+    // Trigger the fetch
     cy.window().then((win) => win.fetchAndDisplayStudents());
     cy.wait('@fetchStudents');
   });
 
-  it('should construct URL without the "sortCGPA" parameter if sortCGPA is not selected', () => {
+  it('should construct URL without "sortCGPA" if sortCGPA is not selected', () => {
     cy.get('#searchName').type('John Doe');
     cy.get('#sortCGPA').select(''); // Ensure no sortCGPA is selected
     cy.get('#filterDiploma').select('Cybersecurity & Digital Forensics');
@@ -145,11 +129,12 @@ describe('Student Search and View Functionality', () => {
       expect(url.searchParams.get('diploma')).to.eq('Cybersecurity & Digital Forensics');
     }).as('fetchStudents');
 
+    // Trigger the fetch
     cy.window().then((win) => win.fetchAndDisplayStudents());
     cy.wait('@fetchStudents');
   });
 
-  it('should construct URL without the "diploma" parameter if filterDiploma is not selected', () => {
+  it('should construct URL without "diploma" if filterDiploma is not selected', () => {
     cy.get('#searchName').type('Jane');
     cy.get('#sortCGPA').select('desc');
     cy.get('#filterDiploma').select(''); // Ensure no diploma is selected
@@ -161,8 +146,67 @@ describe('Student Search and View Functionality', () => {
       expect(url.searchParams.has('diploma')).to.be.false; // No "diploma" parameter
     }).as('fetchStudents');
 
+    // Trigger the fetch
     cy.window().then((win) => win.fetchAndDisplayStudents());
     cy.wait('@fetchStudents');
   });
 
+  it('should display "No students found" message when no students exist', () => {
+    // Simulate an empty students list
+    cy.window().then((win) => {
+      win.allStudents = [];
+      win.displayNoStudentsMessage();
+  
+      // Ensure the "No students found" message is displayed in the table
+      cy.get('tbody#tableContent tr').should('have.length', 1);
+      cy.get('tbody#tableContent td').should('contain.text', 'No students found');
+    });
+  });
+
+  it('should display an error message when displayErrorMessage is called', () => {
+    const errorMessage = "Failed to fetch student data"; // Example error message
+  
+    // Stub the displayErrorMessage function
+    cy.window().then((win) => {
+      const originalFn = win.displayErrorMessage; // Reference the original function
+  
+      // Stub the function without recursive calls
+      cy.stub(win, 'displayErrorMessage').callsFake((message) => {
+        expect(message).to.eq(errorMessage); // Validate the message
+        originalFn.call(win, message); // Call the original function to update the DOM
+      });
+  
+      // Trigger the error
+      win.displayErrorMessage(errorMessage);
+  
+      // Assert the error message is displayed
+      cy.get('#errorMessage', { timeout: 5000 })
+        .should('exist') // Ensure the element exists
+        .and('contain.text', errorMessage); // Validate the text
+    });
+  });
+  
+  it('should execute displayNoStudentsMessage when no students are available', () => {
+    cy.window().then((win) => {
+      // Set allStudents to empty and call the function
+      win.allStudents = [];
+      win.displayNoStudentsMessage();
+
+      // Verify the "No students found" message is displayed
+      cy.get('tbody#tableContent tr')
+        .should('have.length', 1)
+        .and('contain.text', 'No students found');
+    });
+  });
+
+  it('should handle empty students array in displayStudents', () => {
+    cy.window().then((win) => {
+      win.displayStudents([]); // Pass an empty array
+
+      // Verify the "No data available" message is displayed
+      cy.get('tbody#tableContent tr')
+        .should('have.length', 1)
+        .and('contain.text', 'No data available');
+    });
+  });
 });

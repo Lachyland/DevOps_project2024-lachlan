@@ -7,11 +7,11 @@
     "backend-test": "nyc --nycrc-path .nycrc-backend mocha test/ResourceUtil.test.js --exit",
     "frontend-instrument": "xcopy public instrumented /I /E /Y & nyc instrument public instrumented",
     "frontend-test": "rmdir -r .nyc_output & nyc --nycrc-path .nycrc-frontend cypress run",
-    "frontend-test-chrome": "rmdir -r .nyc_output & nyc --nycrc-path .nyc-frontend cypress run --browser chrome",
-    "frontend-test-firefox": "del /q /f /s .nyc_output & nyc --nycrc-path .nycrc-frontend cypress run --browser firefox",
+    "frontend-test-chrome": "rmdir -r .nyc_output & nyc --nycrc-path .nycrc-frontend cypress run --browser chrome",
+    "frontend-test-opera": "rmdir -r .nyc_output & nyc --nycrc-path .nycrc-frontend cypress run --browser opera",
+    "frontend-test-edge": "rmdir -r .nyc_output & nyc --nycrc-path .nycrc-frontend cypress run --browser edge",
     "test": "jest test/StudentUtil.test.js"
   },
-
   "keywords": [],
   "author": "",
   "license": "ISC",

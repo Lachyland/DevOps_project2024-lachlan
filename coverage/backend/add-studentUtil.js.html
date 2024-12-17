@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for delete-student.js</title>
+    <title>Code coverage report for add-studentUtil.js</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="prettify.css" />
     <link rel="stylesheet" href="base.css" />
@@ -19,34 +19,34 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="index.html">All files</a> delete-student.js</h1>
+        <h1><a href="index.html">All files</a> add-studentUtil.js</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">36.36% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/11</span>
+                <span class='fraction'>4/11</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/4</span>
+                <span class='fraction'>0/0</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/3</span>
+                <span class='fraction'>0/1</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">36.36% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/11</span>
+                <span class='fraction'>4/11</span>
             </div>
         
             
@@ -83,60 +83,54 @@
 <a name='L18'></a><a href='#L18'>18</a>
 <a name='L19'></a><a href='#L19'>19</a>
 <a name='L20'></a><a href='#L20'>20</a>
-<a name='L21'></a><a href='#L21'>21</a>
-<a name='L22'></a><a href='#L22'>22</a>
-<a name='L23'></a><a href='#L23'>23</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L21'></a><a href='#L21'>21</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">// public/js/Read-student.js
-function <span class="fstat-no" title="function not covered" >deleteStudent(</span>studentId) {
-<span class="cstat-no" title="statement not covered" >    if (confirm("Are you sure you want to delete this student?")) {</span>
-        const xhr = <span class="cstat-no" title="statement not covered" >new XMLHttpRequest();</span>
-<span class="cstat-no" title="statement not covered" >        xhr.open('DELETE', `/delete-student/${studentId}`, true);</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">const Student = require('../models/Student');
+const fs = require('fs').promises;
+const mongoose = require('mongoose');
 &nbsp;
-<span class="cstat-no" title="statement not covered" >        xhr.onload = <span class="fstat-no" title="function not covered" >fu</span>nction () {</span>
-<span class="cstat-no" title="statement not covered" >            if (xhr.status === 200) {</span>
-<span class="cstat-no" title="statement not covered" >                alert('Student deleted successfully.');</span>
-<span class="cstat-no" title="statement not covered" >                fetchAndDisplayStudents(); </span>// Refresh the list of students
-            } else {
-<span class="cstat-no" title="statement not covered" >                console.error('Failed to delete student:', xhr.statusText);</span>
-            }
-        };
+async function <span class="fstat-no" title="function not covered" >addStudent(</span>req, res) {
+<span class="cstat-no" title="statement not covered" >    try {</span>
+        const { adminNumber, name, diploma, cGPA, image } = <span class="cstat-no" title="statement not covered" >req.body;</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >        xhr.onerror = <span class="fstat-no" title="function not covered" >fu</span>nction () {</span>
-<span class="cstat-no" title="statement not covered" >            console.error('Request error');</span>
-        };
+        const cGPADecimal = <span class="cstat-no" title="statement not covered" >mongoose.Types.Decimal128.fromString(cGPA.toString());</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >        xhr.send();</span>
+        const newStudent = <span class="cstat-no" title="statement not covered" >new Student({ adminNumber, name, diploma, cGPA: cGPADecimal, image });</span>
+        const savedStudent = <span class="cstat-no" title="statement not covered" >await newStudent.save();</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        return res.status(201).json(savedStudent);</span>
+    } catch (error) {
+<span class="cstat-no" title="statement not covered" >        return res.status(500).json({ message: error.message });</span>
     }
 }
-&nbsp;</pre></td></tr></table></pre>
+module.exports = {
+    addStudent
+};</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
             </div><!-- /wrapper -->
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2024-12-04T13:15:34.903Z
+                at 2024-12-04T13:12:18.488Z
             </div>
         <script src="prettify.js"></script>
         <script>

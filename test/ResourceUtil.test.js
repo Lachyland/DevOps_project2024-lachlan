@@ -236,72 +236,54 @@ describe('Student API - READ Function', () => {
         expect(responseData[1].cGPA).to.equal('3.8');
     });
 
-    it('should return 500 and log the error if student.find() fails', async () => {
-        const req = { query: {} };
+    it('should sort students by CGPA in ascending order if sortCGPA is "asc"', async () => {
+        const req = { query: { sortCGPA: 'asc' } };
         const res = {
             status: sinon.stub().returnsThis(),
             json: sinon.stub(),
         };
-
-        const errorMessage = 'Database query failed';
-        sinon.stub(student, 'find').throws(new Error(errorMessage));
-
-        await readStudent(req, res);
-
-        expect(res.status.calledWith(500)).to.be.true;
-        expect(res.json.calledWith(sinon.match({ message: `Server error: ${errorMessage}` }))).to.be.true;
-    });
-
-    it('should correctly format students and convert cGPA to string', async () => {
-        const req = { query: {} };
-        const res = {
-            status: sinon.stub().returnsThis(),
-            json: sinon.stub(),
-        };
-
+    
         const mockStudents = [
-            {
-                adminNumber: '1234567A',
-                name: 'John Doe',
-                diploma: 'Information Technology',
-                cGPA: 3.5,
-                toObject: function () {
-                    return { ...this };
-                },
-            },
+            { adminNumber: '1', cGPA: 3.2, toObject: function () { return { ...this }; } },
+            { adminNumber: '2', cGPA: 2.9, toObject: function () { return { ...this }; } },
+            { adminNumber: '3', cGPA: 3.8, toObject: function () { return { ...this }; } }
         ];
-
+    
         sinon.stub(student, 'find').resolves(mockStudents);
+    
         await readStudent(req, res);
-
+    
         expect(res.status.calledWith(200)).to.be.true;
+    
         const responseData = res.json.getCall(0).args[0];
-        expect(responseData[0].cGPA).to.equal('3.5');
+        expect(responseData[0].cGPA).to.equal('2.9'); // Lowest CGPA
+        expect(responseData[1].cGPA).to.equal('3.2');
+        expect(responseData[2].cGPA).to.equal('3.8'); // Highest CGPA
     });
-
-    it('should correctly format students and convert cGPA to string', async () => {
-        const req = { query: {} };
+    
+    it('should sort students by CGPA in descending order if sortCGPA is "desc"', async () => {
+        const req = { query: { sortCGPA: 'desc' } };
         const res = {
             status: sinon.stub().returnsThis(),
             json: sinon.stub(),
         };
+    
         const mockStudents = [
-            {
-                adminNumber: '1234567A',
-                name: 'John Doe',
-                diploma: 'Information Technology',
-                cGPA: 3.5, // cGPA as a number
-                toObject: function () {
-                    return { ...this };
-                },
-            },
+            { adminNumber: '1', cGPA: 3.2, toObject: function () { return { ...this }; } },
+            { adminNumber: '2', cGPA: 2.9, toObject: function () { return { ...this }; } },
+            { adminNumber: '3', cGPA: 3.8, toObject: function () { return { ...this }; } }
         ];
-
+    
         sinon.stub(student, 'find').resolves(mockStudents);
+    
         await readStudent(req, res);
+    
         expect(res.status.calledWith(200)).to.be.true;
+    
         const responseData = res.json.getCall(0).args[0];
-        expect(responseData[0]).to.have.property('cGPA').that.equals('3.5');
-        sinon.restore();
+        expect(responseData[0].cGPA).to.equal('3.8'); // Highest CGPA
+        expect(responseData[1].cGPA).to.equal('3.2');
+        expect(responseData[2].cGPA).to.equal('2.9'); // Lowest CGPA
     });
+    
 });

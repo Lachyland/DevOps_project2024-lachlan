@@ -5,6 +5,18 @@ let baseUrl;
 module.exports = defineConfig({
   e2e: {
     setupNodeEvents(on, config) {
+      config.browsers = [
+        ...config.browsers,
+        {
+          name: "opera",
+          family: "chromium",
+          channel: "stable",
+          displayName: "Opera",
+          version: "115.0.5322.68",
+          majorVersion: "115",
+          path: "C:\\Users\\GIGABYTE G5\\AppData\\Local\\Programs\\Opera\\opera.exe",
+        },
+      ];
       require('@cypress/code-coverage/task')(on, config)
       on("task", {
         startServer() {

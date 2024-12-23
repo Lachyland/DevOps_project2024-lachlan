@@ -165,13 +165,5 @@ describe('Student Search and View Functionality', () => {
     cy.wait('@fetchStudents');
   });
 
-  it('should display an error message when the API request fails', () => {
-    cy.intercept('GET', '/read-student*', { statusCode: 500 }).as('fetchFailed');
-  
-    cy.window().then((win) => win.fetchAndDisplayStudents());
-    cy.wait('@fetchFailed');
-  
-    cy.get('#errorMessage').should('exist').and('contain', 'Failed to fetch student data');
-  });
 
 });

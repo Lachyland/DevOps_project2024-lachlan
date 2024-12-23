@@ -142,4 +142,52 @@ describe('Student Search and View Functionality', () => {
     cy.window().then((win) => win.fetchAndDisplayStudents());
     cy.wait('@fetchStudents');
   });
+
+  it('should display a message when no students are found', () => {
+    // Mock the allStudents array to be empty
+    cy.window().then((win) => {
+        win.allStudents = [];
+        win.displayNoStudentsMessage();
+    });
+
+    cy.get('#tableContent').should('contain', 'No students found');
+});
+
+it('should sort students by cGPA in descending order', () => {
+  // Assuming you have a way to set up students with known cGPA values
+  const students = [
+      { name: 'Alice', cGPA: 3.5 },
+      { name: 'Bob', cGPA: 3.8 },
+      { name: 'Charlie', cGPA: 3.2 }
+  ];
+
+  // Mock the allStudents array
+  cy.window().then((win) => {
+      win.allStudents = students;
+      win.filterStudents();
+  });
+
+  // Set sortCGPA to 'desc'
+  cy.get('#sortCGPA').select('desc');
+  cy.window().then((win) => win.filterStudents());
+
+  // Verify the order of students
+  cy.get('tbody#tableContent tr').first().should('contain', 'Bob'); // Highest CGPA
+});
+
+it('should sort students by cGPA in ascending order', () => {
+  // Mock the allStudents array
+  cy.window().then((win) => {
+      win.allStudents = students;
+      win.filterStudents();
+  });
+
+  // Set sortCGPA to 'asc'
+  cy.get('#sortCGPA').select('asc');
+  cy.window().then((win) => win.filterStudents());
+
+  // Verify the order of students
+  cy.get('tbody#tableContent tr').first().should('contain', 'Charlie'); // Lowest CGPA
+});
+
 });

@@ -134,7 +134,7 @@ describe('Student Search and View Functionality', () => {
     cy.window().then((win) => win.fetchAndDisplayStudents());
     cy.wait('@fetchStudents');
   });
-  
+
   it('should load the page and display all students', () => {
     // Wait for the table to be visible
     cy.get('tbody#tableContent', { timeout: 10000 }).should('exist');
@@ -216,5 +216,37 @@ describe('Student Search and View Functionality', () => {
     cy.wait('@fetchStudents');
   });
 
+  it('should construct URL without any parameters when all filters are cleared', () => {
+    cy.get('#searchName').clear();
+    cy.get('#sortCGPA').select('');
+    cy.get('#filterDiploma').select('');
+
+    // Stub the XHR request to capture the URL
+    cy.intercept('GET', '/read-student*', (req) => {
+      const url = new URL(req.url, window.location.origin);
+      expect(url.search).to.eq(''); // No query parameters in the URL
+    }).as('fetchStudents');
+
+    // Trigger the fetch
+    cy.window().then((win) => win.fetchAndDisplayStudents());
+    cy.wait('@fetchStudents');
+  });
+
+  it('should construct URL without unnecessary parameters when optional fields are empty', () => {
+    cy.get('#searchName').type('John Doe');
+    cy.get('#sortCGPA').select(''); // Leave sortCGPA empty
+    cy.get('#filterDiploma').select(''); // Leave filterDiploma empty
+
+    cy.intercept('GET', '/read-student*', (req) => {
+      const url = new URL(req.url, window.location.origin);
+      expect(url.searchParams.get('name')).to.eq('John Doe'); // Only 'name' should exist
+      expect(url.searchParams.has('sortCGPA')).to.be.false;
+      expect(url.searchParams.has('diploma')).to.be.false;
+    }).as('fetchStudents');
+
+    // Trigger the fetch
+    cy.window().then((win) => win.fetchAndDisplayStudents());
+    cy.wait('@fetchStudents');
+  });
 
 });

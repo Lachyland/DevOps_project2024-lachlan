@@ -190,4 +190,68 @@ it('should sort students by cGPA in ascending order', () => {
   cy.get('tbody#tableContent tr').first().should('contain', 'Charlie'); // Lowest CGPA
 });
 
+it('should display an error message on the page', () => {
+  const errorMessage = 'An error occurred while fetching data.';
+  
+  // Call the function directly
+  cy.window().then((win) => {
+      win.displayErrorMessage(errorMessage);
+  });
+
+  // Check if the error message is displayed
+  cy.get('#errorMessage').should('contain', errorMessage);
+});
+
+it('should display a message when no students are found', () => {
+  // Mock the allStudents array to be empty
+  cy.window().then((win) => {
+      win.allStudents = [];
+      win.displayNoStudentsMessage();
+  });
+
+  cy.get('#tableContent').should('contain', 'No students found');
+});
+
+it('should sort students by cGPA in descending order', () => {
+  const students = [
+      { name: 'Alice', cGPA: 3.5 },
+      { name: 'Bob', cGPA: 3.8 },
+      { name: 'Charlie', cGPA: 3.2 }
+  ];
+
+  // Mock the allStudents array
+  cy.window().then((win) => {
+      win.allStudents = students;
+      win.filterStudents();
+  });
+
+  // Set sortCGPA to 'desc'
+  cy.get('#sortCGPA').select('desc');
+  cy.window().then((win) => win.filterStudents());
+
+  // Verify the order of students
+  cy.get('tbody#tableContent tr').first().should('contain', 'Bob'); // Highest CGPA
+});
+
+it('should sort students by cGPA in ascending order', () => {
+  const students = [
+      { name: 'Alice', cGPA: 3.5 },
+      { name: 'Bob', cGPA: 3.8 },
+      { name: 'Charlie', cGPA: 3.2 }
+  ];
+
+  // Mock the allStudents array
+  cy.window().then((win) => {
+      win.allStudents = students;
+      win.filterStudents();
+  });
+
+  // Set sortCGPA to 'asc'
+  cy.get('#sortCGPA').select('asc');
+  cy.window().then((win) => win.filterStudents());
+
+  // Verify the order of students
+  cy.get('tbody#tableContent tr').first().should('contain', 'Charlie'); // Lowest CGPA
+});
+
 });

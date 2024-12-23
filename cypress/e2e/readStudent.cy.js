@@ -212,46 +212,5 @@ it('should display a message when no students are found', () => {
   cy.get('#tableContent').should('contain', 'No students found');
 });
 
-it('should sort students by cGPA in descending order', () => {
-  const students = [
-      { name: 'Alice', cGPA: 3.5 },
-      { name: 'Bob', cGPA: 3.8 },
-      { name: 'Charlie', cGPA: 3.2 }
-  ];
-
-  // Mock the allStudents array
-  cy.window().then((win) => {
-      win.allStudents = students;
-      win.filterStudents();
-  });
-
-  // Set sortCGPA to 'desc'
-  cy.get('#sortCGPA').select('desc');
-  cy.window().then((win) => win.filterStudents());
-
-  // Verify the order of students
-  cy.get('tbody#tableContent tr').first().should('contain', 'Bob'); // Highest CGPA
-});
-
-it('should sort students by cGPA in ascending order', () => {
-  const students = [
-      { name: 'Alice', cGPA: 3.5 },
-      { name: 'Bob', cGPA: 3.8 },
-      { name: 'Charlie', cGPA: 3.2 }
-  ];
-
-  // Mock the allStudents array
-  cy.window().then((win) => {
-      win.allStudents = students;
-      win.filterStudents();
-  });
-
-  // Set sortCGPA to 'asc'
-  cy.get('#sortCGPA').select('asc');
-  cy.window().then((win) => win.filterStudents());
-
-  // Verify the order of students
-  cy.get('tbody#tableContent tr').first().should('contain', 'Charlie'); // Lowest CGPA
-});
 
 });

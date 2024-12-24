@@ -154,17 +154,16 @@ describe('Student Search and View Functionality', () => {
 });
 
 it('should sort students by cGPA in descending order', () => {
-  // Assuming you have a way to set up students with known cGPA values
   const students = [
-      { name: 'Alice', cGPA: 3.5 },
-      { name: 'Bob', cGPA: 3.8 },
-      { name: 'Charlie', cGPA: 3.2 }
+      { name: 'Jane Smith', cGPA: 3.6 },
+      { name: 'John Doe', cGPA: 3.5 },
+      { name: 'Wei Short', cGPA: 2.1 }
   ];
 
   // Mock the allStudents array
   cy.window().then((win) => {
       win.allStudents = students;
-      win.filterStudents();
+      win.filterStudents(); // Assuming this function re-renders the table based on sorting
   });
 
   // Set sortCGPA to 'desc'
@@ -172,14 +171,23 @@ it('should sort students by cGPA in descending order', () => {
   cy.window().then((win) => win.filterStudents());
 
   // Verify the order of students
-  cy.get('tbody#tableContent tr').first().should('contain', 'Bob'); // Highest CGPA
+  cy.get('tbody#tableContent tr').first().should('contain', 'Jane Smith'); // Highest CGPA
+  cy.get('tbody#tableContent tr').eq(1).should('contain', 'John Doe');
+  cy.get('tbody#tableContent tr').last().should('contain', 'Wei Short');
 });
 
+
 it('should sort students by cGPA in ascending order', () => {
+  const students = [
+      { name: 'Jane Smith', cGPA: 3.6 },
+      { name: 'John Doe', cGPA: 3.5 },
+      { name: 'Wei Short', cGPA: 2.1 }
+  ];
+
   // Mock the allStudents array
   cy.window().then((win) => {
       win.allStudents = students;
-      win.filterStudents();
+      win.filterStudents(); // Assuming this function renders the table
   });
 
   // Set sortCGPA to 'asc'
@@ -187,8 +195,11 @@ it('should sort students by cGPA in ascending order', () => {
   cy.window().then((win) => win.filterStudents());
 
   // Verify the order of students
-  cy.get('tbody#tableContent tr').first().should('contain', 'Charlie'); // Lowest CGPA
+  cy.get('tbody#tableContent tr').first().should('contain', 'Wei Short'); // Lowest CGPA
+  cy.get('tbody#tableContent tr').eq(1).should('contain', 'John Doe');
+  cy.get('tbody#tableContent tr').last().should('contain', 'Jane Smith');
 });
+
 
 it('should display an error message on the page', () => {
   const errorMessage = 'An error occurred while fetching data.';

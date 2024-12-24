@@ -170,12 +170,14 @@ it('should sort students by cGPA in descending order', () => {
   cy.get('#sortCGPA').select('desc');
   cy.window().then((win) => win.filterStudents());
 
+  // Wait for the table to update
+  cy.wait(500); // Adjust the wait time as necessary
+
   // Verify the order of students
   cy.get('tbody#tableContent tr').first().should('contain', 'Jane Smith'); // Highest CGPA
   cy.get('tbody#tableContent tr').eq(1).should('contain', 'John Doe');
   cy.get('tbody#tableContent tr').last().should('contain', 'Wei Short');
 });
-
 
 it('should sort students by cGPA in ascending order', () => {
   const students = [
@@ -193,6 +195,9 @@ it('should sort students by cGPA in ascending order', () => {
   // Set sortCGPA to 'asc'
   cy.get('#sortCGPA').select('asc');
   cy.window().then((win) => win.filterStudents());
+
+  // Wait for the table to update
+  cy.wait(500); // Adjust the wait time as necessary
 
   // Verify the order of students
   cy.get('tbody#tableContent tr').first().should('contain', 'Wei Short'); // Lowest CGPA

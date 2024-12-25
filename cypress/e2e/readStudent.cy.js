@@ -18,7 +18,6 @@ describe('Student Search and View Functionality', () => {
     cy.visit(baseUrl);
   });
 
-
   it('should load the page and display all students', () => {
     cy.get('tbody#tableContent', { timeout: 10000 }).should('exist');
     cy.get('tbody#tableContent tr').should('have.length.greaterThan', 0);
@@ -143,5 +142,49 @@ describe('Student Search and View Functionality', () => {
     cy.wait('@fetchStudents');
   });
 
+  it('should filter students by name', () => {
+    const students = [
+      { name: 'John Doe', diploma: 'Cybersecurity & Digital Forensics', cGPA: 3.5 },
+      { name: 'Jane Smith', diploma: 'Information Technology', cGPA: 3.8 },
+    ];
+
+    cy.intercept('GET', '/read-student*', {
+      statusCode: 200,
+      body: students,
+    }).as('fetchStudents');
+
+    cy.window().then((win) => {
+      win.fetchAndDisplayStudents();
+    });
+
+    cy.wait('@fetchStudents');
+
+    // Type in the search box to filter by name
+    cy.get('#searchName').clear().type('John Doe');
+    cy.get('#tableContent').should('contain', 'John Doe');
+    cy.get('#tableContent').should('not.contain', 'Jane Smith');
+  });
+
+  it('should sort students by cGPA', () => {
+    const students = [
+      { name: 'John Doe', diploma: 'Cybersecurity & Digital Forensics', cGPA: 3.5 },
+      { name: 'Jane Smith', diploma: 'Information Technology', cGPA: 3.8 },
+    ];
+
+    cy.intercept('GET', '/read-student*', {
+      statusCode: 200,
+      body: students,
+    }).as('fetchStudents');
+
+    cy.window().then((win) => {
+      win.fetchAndDisplayStudents();
+    });
+
+    cy.wait('@fetchStudents');
+
+    // Select sorting option
+    cy.get('#sortCGPA').select('desc');
+    cy.get('#tableContent tr').first().should('contain', 'Jane Smith'); // Highest cGPA first
+  });
 
 });

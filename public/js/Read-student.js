@@ -14,15 +14,15 @@ function displayErrorMessage(message) {
     }
 }
 
-// Display a message when no students are found
 function displayNoStudentsMessage() {
     const tableContent = document.getElementById('tableContent');
-    if (allStudents.length === 0) {
+    const existingNoDataRow = tableContent.querySelector('tr.no-data');
+    if (!existingNoDataRow) {
         const row = document.createElement('tr');
         const cell = document.createElement('td');
         cell.colSpan = 6;
-        cell.className = 'text-center';
-        cell.innerText = 'No students found';
+        cell.className = 'text-center no-data'; // Add a class for easier identification
+        cell.innerText = 'No data available';
         row.appendChild(cell);
         tableContent.appendChild(row);
     }
@@ -88,34 +88,41 @@ function filterStudents() {
     }
 
     displayStudents(filteredStudents); // Display the filtered and sorted students
-    displayNoStudentsMessage(); // Check if no students are found
 }
 
 // Display students in the table
 function displayStudents(students) {
-    let html = "";
+    const tableContent = document.getElementById('tableContent');
+    tableContent.innerHTML = ""; // Clear previous content
 
-    // Check if the students array is empty
     if (students.length === 0) {
-        html = `<tr><td colspan="6" class="text-center">No data available</td></tr>`;
+        const row = document.createElement('tr');
+        const cell = document.createElement('td');
+        cell.colSpan = 6;
+        cell.className = 'text-center no-data'; // Add a class for easier identification
+        cell.innerText = 'No data available';
+        row.appendChild(cell);
+        tableContent.appendChild(row);
     } else {
         students.forEach((student, index) => {
             const imageUrl = student.image || 'data:image/png;base64,defaultBase64String';
 
-            html += `<tr>
-                        <td>${index + 1}</td>
-                        <td>${student.adminNumber}</td>
-                        <td>
-                            <img src="${imageUrl}" alt="Student Photo" style="width: 50px; height: 50px; object-fit: cover; border-radius: 50%; margin-right: 10px;">
-                            ${student.name}
-                        </td>
-                        <td>${student.diploma}</td>
-                        <td>${student.cGPA}</td>
-                        <td>
-                            <button class="btn btn-primary" onclick="openEditModal('${student.adminNumber}', '${student.name}', '${student.diploma}', '${student.cGPA}', '${imageUrl}')">Update</button>
-                            <button class="btn btn-danger" onclick="deleteStudent('${student._id}')">Delete</button>
-                        </td>
-                     </tr>`;
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${index + 1}</td>
+                <td>${student.adminNumber}</td>
+                <td>
+                    <img src="${imageUrl}" alt="Student Photo" style="width: 50px; height: 50px; object-fit: cover; border-radius: 50%; margin-right: 10px;">
+                    ${student.name}
+                </td>
+                <td>${student.diploma}</td>
+                <td>${student.cGPA}</td>
+                <td>
+                    <button class="btn btn-primary" onclick="openEditModal('${student.adminNumber}', '${student.name}', '${student.diploma}', '${student.cGPA}', '${imageUrl}')">Update</button>
+                    <button class="btn btn-danger" onclick="deleteStudent('${student._id}')">Delete</button>
+                </td>
+            `;
+            tableContent.appendChild(row);
         });
     }
 

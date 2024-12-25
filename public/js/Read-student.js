@@ -92,39 +92,30 @@ function filterStudents() {
 
 // Display students in the table
 function displayStudents(students) {
-    const tableContent = document.getElementById('tableContent');
-    tableContent.innerHTML = ""; // Clear previous content
+    let html = "";
 
     if (students.length === 0) {
-        const row = document.createElement('tr');
-        const cell = document.createElement('td');
-        cell.colSpan = 6;
-        cell.className = 'text-center no-data'; // Add a class for easier identification
-        cell.innerText = 'No data available';
-        row.appendChild(cell);
-        tableContent.appendChild(row);
-    } else {
-        students.forEach((student, index) => {
-            const imageUrl = student.image || 'data:image/png;base64,defaultBase64String';
-
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td>${index + 1}</td>
-                <td>${student.adminNumber}</td>
-                <td>
-                    <img src="${imageUrl}" alt="Student Photo" style="width: 50px; height: 50px; object-fit: cover; border-radius: 50%; margin-right: 10px;">
-                    ${student.name}
-                </td>
-                <td>${student.diploma}</td>
-                <td>${student.cGPA}</td>
-                <td>
-                    <button class="btn btn-primary" onclick="openEditModal('${student.adminNumber}', '${student.name}', '${student.diploma}', '${student.cGPA}', '${imageUrl}')">Update</button>
-                    <button class="btn btn-danger" onclick="deleteStudent('${student._id}')">Delete</button>
-                </td>
-            `;
-            tableContent.appendChild(row);
-        });
-    }
+        html = `<tr><td colspan="6" class="text-center">No data available</td></tr>`;   } else {
+            students.forEach((student, index) => {
+                const imageUrl = student.image || 'data:image/png;base64,defaultBase64String';
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>${student.adminNumber}</td>
+                    <td>
+                        <img src="${imageUrl}" alt="Student Photo" style="width: 50px; height: 50px; object-fit: cover; border-radius: 50%; margin-right: 10px;">
+                        ${student.name}
+                    </td>
+                    <td>${student.diploma}</td>
+                    <td>${student.cGPA}</td>
+                    <td>
+                        <button class="btn btn-primary" onclick="openEditModal('${student.adminNumber}', '${student.name}', '${student.diploma}', '${student.cGPA}', '${imageUrl}')">Update</button>
+                        <button class="btn btn-danger" onclick="deleteStudent('${student._id}')">Delete</button>
+                    </td>
+                `;
+                tableContent.appendChild(row);
+            });
+        }
 
     document.getElementById('tableContent').innerHTML = html;
 }

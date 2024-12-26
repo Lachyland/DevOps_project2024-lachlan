@@ -4,7 +4,7 @@
 "html"
 ],
 "include": [
-" public/js/**/Read-student.js"
+" **/public/js/**/*.js"
 ],
 "reportDir": "coverage/frontend",
 "check-coverage": true,

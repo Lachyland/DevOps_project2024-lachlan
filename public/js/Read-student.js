@@ -95,27 +95,28 @@ function displayStudents(students) {
     let html = "";
 
     if (students.length === 0) {
-        html = `<tr><td colspan="6" class="text-center">No data available</td></tr>`;   } else {
-            students.forEach((student, index) => {
-                const imageUrl = student.image || 'data:image/png;base64,defaultBase64String';
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${index + 1}</td>
-                    <td>${student.adminNumber}</td>
-                    <td>
-                        <img src="${imageUrl}" alt="Student Photo" style="width: 50px; height: 50px; object-fit: cover; border-radius: 50%; margin-right: 10px;">
-                        ${student.name}
-                    </td>
-                    <td>${student.diploma}</td>
-                    <td>${student.cGPA}</td>
-                    <td>
-                        <button class="btn btn-primary" onclick="openEditModal('${student.adminNumber}', '${student.name}', '${student.diploma}', '${student.cGPA}', '${imageUrl}')">Update</button>
-                        <button class="btn btn-danger" onclick="deleteStudent('${student._id}')">Delete</button>
-                    </td>
-                `;
-                tableContent.appendChild(row);
-            });
-        }
+        html = `<tr><td colspan="6" class="text-center">No data available</td></tr>`;   
+    } else {
+        students.forEach((student, index) => {
+            const imageUrl = student.image || 'data:image/png;base64,defaultBase64String';
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${index + 1}</td>
+                <td>${student.adminNumber}</td>
+                <td>
+                    <img src="${imageUrl}" alt="Student Photo" style="width: 50px; height: 50px; object-fit: cover; border-radius: 50%; margin-right: 10px;">
+                    ${student.name}
+                </td>
+                <td>${student.diploma}</td>
+                <td>${student.cGPA}</td>
+                <td>
+                    <button class="btn btn-primary" onclick="openEditModal('${student.adminNumber}', '${student.name}', '${student.diploma}', '${student.cGPA}', '${imageUrl}')">Update</button>
+                    <button class="btn btn-danger" onclick="deleteStudent('${student._id}')">Delete</button>
+                </td>
+            `;
+            tableContent.appendChild(row);
+        });
+    }
 
     document.getElementById('tableContent').innerHTML = html;
 }

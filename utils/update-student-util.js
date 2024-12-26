@@ -1,45 +1,38 @@
-const Student = require('../models/Student'); // Adjust the path if necessary
+const fs = require('fs').promises;
 
-async function updateStudent(adminNumber, studentData) {
-    const { name, diploma, cGPA, image } = studentData;
-
+async function updateStudent(req, res) {
     try {
-        // Prepare update object
-        const updateFields = {
+        const { adminNumber, name, diploma, cGPA, image } = req.body;
+
+        // Read the student data from the JSON file
+        const studentsData = await fs.readFile('studentdata.json', 'utf-8');
+        const students = JSON.parse(studentsData);
+
+        // Find the student to update
+        const studentIndex = students.findIndex(student => student.adminNumber === adminNumber);
+        
+        if (studentIndex === -1) {
+            return res.status(404).json({ message: 'Student not found' });
+        }
+
+        // Update the student data
+        students[studentIndex] = {
+            ...students[studentIndex],
             name,
             diploma,
-            cGPA
+            cGPA: parseFloat(cGPA),
+            image
         };
 
-        // If image exists, include it in the update
-        if (image !== undefined) {
-            updateFields.image = image;  // Only update the image if it's provided
-        }
+        // Save the updated students list back to the JSON file
+        await fs.writeFile('studentdata.json', JSON.stringify(students, null, 2));
 
-        // Perform the update operation
-        const student = await Student.findOneAndUpdate(
-            { adminNumber },  // Find by adminNumber
-            updateFields,  // Update fields, including image if present
-            { new: true }  // Return the updated document
-        );
-
-        if (!student) {
-            throw new Error('Resource not found');
-        }
-
-        // Convert Decimal128 fields to strings if necessary
-        return {
-            adminNumber: student.adminNumber,
-            name: student.name,
-            diploma: student.diploma,
-            cGPA: student.cGPA ? student.cGPA.toString() : null,
-            image: student.image,
-        };
+        // Return the updated student
+        res.json({ message: 'Student updated successfully', student: students[studentIndex] });
     } catch (error) {
-        throw new Error(`Error updating resource: ${error.message}`);
+        console.error("Error updating student:", error);
+        res.status(500).json({ message: 'Server error: ' + error.message });
     }
 }
-
-
 
 module.exports = updateStudent;

@@ -24,7 +24,7 @@ describe('Student Search and View Functionality', () => {
   });
 
   it('should search for a student by name', () => {
-    const searchQuery = 'John Doe'; // Example search query
+    const searchQuery = 'Lachlan'; // Example search query
 
     cy.get('#searchName').clear().type(searchQuery);
     cy.get('tbody#tableContent').should('contain', searchQuery);

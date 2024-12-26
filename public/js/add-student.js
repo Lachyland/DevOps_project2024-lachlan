@@ -32,7 +32,7 @@ function addStudent() {
         return;
     }
 
-    const confirmAdd = confirm("Are you sure you want to add this data");
+    const confirmAdd = confirm("Are you sure you want to add this data?");
     if (!confirmAdd) {
         return; // If the user cancels, stop the function
     }

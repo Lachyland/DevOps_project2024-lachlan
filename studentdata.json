@@ -1,0 +1,26 @@
+[
+  {
+    "adminNumber": "2333185P",
+    "name": "Sammy",
+    "diploma": "Common ICT Programme",
+    "cGPA": 3.2
+  },
+  {
+    "adminNumber": "2305139D",
+    "name": "Lachlan",
+    "diploma": "Information Technology",
+    "cGPA": 3.5
+  },
+  {
+    "adminNumber": "1237699U",
+    "name": "Taha",
+    "diploma": "Information Technology",
+    "cGPA": 3.1
+  },
+  {
+    "adminNumber": "9898321P",
+    "name": "Nasier",
+    "diploma": "Cybersecurity & Digital Forensics",
+    "cGPA": 2.4
+  }
+]

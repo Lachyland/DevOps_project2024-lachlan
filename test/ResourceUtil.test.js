@@ -4,6 +4,7 @@ const { describe, it, before, after, afterEach } = require('mocha');
 const { expect } = require('chai');
 const sinon = require('sinon');
 const chai = require('chai');
+const fs = require('fs').promises;
 const chaiHttp = require('chai-http');
 chai.use(chaiHttp);
 
@@ -34,33 +35,148 @@ describe('Student API - READ Function', () => {
     it('should return all students when no query is provided', (done) => {
         const mockStudents = [
             {
-                adminNumber: '1234567A',
-                name: 'John Doe',
+                adminNumber: '2333185P',
+                name: 'Sammy',
+                diploma: 'Common ICT Programme',
+                cGPA: 3.2,
+                toObject: function () { return { ...this }; },
+            },
+            {
+                adminNumber: '2305139D',
+                name: 'Lachlan',
                 diploma: 'Information Technology',
                 cGPA: 3.5,
-                toObject: function () {
-                    return { ...this };
-                },
+                toObject: function () { return { ...this }; },
             },
+            {
+                adminNumber: '1237699U',
+                name: 'Taha',
+                diploma: 'Information Technology',
+                cGPA: 3.1,
+                toObject: function () { return { ...this }; },
+            },
+            {
+                adminNumber: '9898321P',
+                name: 'Nasier',
+                diploma: 'Cybersecurity & Digital Forensics',
+                cGPA: 2.4,
+                toObject: function () { return { ...this }; },
+            }
         ];
-
+    
         sinon.stub(student, 'find').resolves(mockStudents);
-
+    
         chai.request(baseUrl)
             .get('/read-student')
             .end((err, res) => {
                 expect(res).to.have.status(200);
-                expect(res.body).to.be.an('array').with.length(1);
-                expect(res.body[0]).to.have.property('adminNumber').that.equals('1234567A');
+                expect(res.body).to.be.an('array').with.length(4);
+                expect(res.body[0]).to.have.property('adminNumber').that.equals('2333185P');
                 done();
             });
     });
 
-    it('should handle empty responses gracefully', (done) => {
-        sinon.stub(student, 'find').resolves([]);
+    it('should return students filtered by adminNumber', (done) => {
+        const mockStudents = [
+            { adminNumber: '2333185P', name: 'Sammy', diploma: 'Common ICT Programme', cGPA: 3.2 },
+            { adminNumber: '2305139D', name: 'Lachlan', diploma: 'Information Technology', cGPA: 3.5 }
+        ];
+        sinon.stub(student, 'find').resolves(mockStudents);
 
         chai.request(baseUrl)
-            .get('/read-student')
+            .get('/read-student?adminNumber=2305139D')
+            .end((err, res) => {
+                expect(res).to.have.status(200);
+                expect(res.body).to.be.an('array').with.length(1);
+                expect(res.body[0].adminNumber).to.equal('2305139D');
+                done();
+            });
+    });
+
+    it('should return students filtered by name search', (done) => {
+        const mockStudents = [
+            { adminNumber: '2333185P', name: 'Sammy', diploma: 'Common ICT Programme', cGPA: 3.2 },
+            { adminNumber: '2305139D', name: 'Lachlan', diploma: 'Information Technology', cGPA: 3.5 },
+            { adminNumber: '1237699U', name: 'Taha', diploma: 'Information Technology', cGPA: 3.1 }
+        ];
+        sinon.stub(student, 'find').resolves(mockStudents);
+
+        chai.request(baseUrl)
+            .get('/read-student?searchName=Lachlan')
+            .end((err, res) => {
+                expect(res).to.have.status(200);
+                expect(res.body).to.be.an('array').with.length(1);
+                expect(res.body[0].name).to.equal('Lachlan');
+                done();
+            });
+    });
+
+    it('should return students filtered by diploma', (done) => {
+        const mockStudents = [
+            { adminNumber: '2333185P', name: 'Sammy', diploma: 'Common ICT Programme', cGPA: 3.2 },
+            { adminNumber: '2305139D', name: 'Lachlan', diploma: 'Information Technology', cGPA: 3.5 },
+            { adminNumber: '1237699U', name: 'Taha', diploma: 'Information Technology', cGPA: 3.1 },
+            { adminNumber: '9898321P', name: 'Nasier', diploma: 'Cybersecurity & Digital Forensics', cGPA: 2.4 }
+        ];
+        
+        sinon.stub(student, 'find').resolves(mockStudents);
+    
+        chai.request(baseUrl)
+            .get('/read-student?filterDiploma=Information Technology')
+            .end((err, res) => {
+                expect(res).to.have.status(200);
+                expect(res.body).to.be.an('array').with.length(2); // Expecting 2 students with "Information Technology" diploma
+                expect(res.body[0].diploma).to.equal('Information Technology');
+                expect(res.body[1].diploma).to.equal('Information Technology');
+                done();
+            });
+    });
+    
+    it('should return students sorted by CGPA in ascending order', (done) => {
+        const mockStudents = [
+            { adminNumber: '2333185P', name: 'Sammy', diploma: 'Common ICT Programme', cGPA: 3.2 },
+            { adminNumber: '2305139D', name: 'Lachlan', diploma: 'Information Technology', cGPA: 3.5 },
+            { adminNumber: '1237699U', name: 'Taha', diploma: 'Information Technology', cGPA: 3.1 }
+        ];
+        sinon.stub(student, 'find').resolves(mockStudents);
+
+        chai.request(baseUrl)
+            .get('/read-student?sortCGPA=asc')
+            .end((err, res) => {
+                expect(res).to.have.status(200);
+                expect(res.body).to.be.an('array');
+                expect(res.body[0].cGPA).to.be.lessThan(res.body[1].cGPA);
+                done();
+            });
+    });
+
+    it('should return students sorted by CGPA in descending order', (done) => {
+        const mockStudents = [
+            { adminNumber: '2333185P', name: 'Sammy', diploma: 'Common ICT Programme', cGPA: 3.2 },
+            { adminNumber: '2305139D', name: 'Lachlan', diploma: 'Information Technology', cGPA: 3.5 },
+            { adminNumber: '1237699U', name: 'Taha', diploma: 'Information Technology', cGPA: 3.1 }
+        ];
+        sinon.stub(student, 'find').resolves(mockStudents);
+
+        chai.request(baseUrl)
+            .get('/read-student?sortCGPA=desc')
+            .end((err, res) => {
+                expect(res).to.have.status(200);
+                expect(res.body).to.be.an('array');
+                expect(res.body[0].cGPA).to.be.greaterThan(res.body[1].cGPA);
+                done();
+            });
+    });
+
+    it('should return a 404 if no students match the filters', (done) => {
+        const mockStudents = [
+            { adminNumber: '2333185P', name: 'Sammy', diploma: 'Common ICT Programme', cGPA: 3.2 },
+            { adminNumber: '2305139D', name: 'Lachlan', diploma: 'Information Technology', cGPA: 3.5 }
+        ];
+        sinon.stub(student, 'find').resolves(mockStudents);
+
+        chai.request(baseUrl)
+            .get('/read-student?adminNumber=9999999X')
             .end((err, res) => {
                 expect(res).to.have.status(404);
                 expect(res.body).to.have.property('message').that.equals('No student records found');
@@ -68,284 +184,17 @@ describe('Student API - READ Function', () => {
             });
     });
 
-    it('should create a query object with adminNumber if provided', async () => {
-        const req = { query: { adminNumber: '1234567A' } };
-        const res = {
-            status: sinon.stub().returnsThis(),
-            json: sinon.stub(),
-        };
+    it('should return a 500 error if the file reading fails', (done) => {
+        // Stub fs.readFile to simulate an error
+        sinon.stub(fs, 'readFile').rejects(new Error('File read failed'));
 
-        const findStub = sinon.stub(student, 'find').resolves([]);
-
-        const { readStudent } = require('../utils/read-util');
-        await readStudent(req, res);
-
-        expect(findStub.calledWith({ adminNumber: '1234567A' })).to.be.true;
-    });
-
-    it('should create an empty query object if adminNumber is not provided', async () => {
-        const req = { query: {} };
-        const res = {
-            status: sinon.stub().returnsThis(),
-            json: sinon.stub(),
-        };
-
-        const findStub = sinon.stub(student, 'find').resolves([]);
-
-        const { readStudent } = require('../utils/read-util');
-        await readStudent(req, res);
-
-        expect(findStub.calledWith({})).to.be.true;
-    });
-
-    it('should correctly format the students with cGPA as string', async () => {
-        const req = { query: {} };
-        const res = {
-            status: sinon.stub().returnsThis(),
-            json: sinon.stub(),
-        };
-
-        const mockStudents = [
-            {
-                adminNumber: '1234567A',
-                name: 'John Doe',
-                diploma: 'Information Technology',
-                cGPA: 3.5,
-                toObject: function () {
-                    return { ...this };
-                },
-            },
-        ];
-
-        sinon.stub(student, 'find').resolves(mockStudents);
-
-        const { readStudent } = require('../utils/read-util');
-        await readStudent(req, res);
-
-        expect(res.status.calledWith(200)).to.be.true;
-        expect(res.json.called).to.be.true;
-
-        const responseData = res.json.getCall(0).args[0];
-        expect(responseData[0].cGPA).to.equal('3.5'); // Ensure cGPA is converted to string
-    });
-
-    it('should return 500 and log the error if student.find() fails', async () => {
-        const req = { query: {} };
-        const res = {
-            status: sinon.stub().returnsThis(),
-            json: sinon.stub(),
-        };
-
-        const errorMessage = 'Database query failed';
-        sinon.stub(student, 'find').throws(new Error(errorMessage));
-
-        const { readStudent } = require('../utils/read-util');
-        await readStudent(req, res);
-
-        expect(res.status.calledWith(500)).to.be.true;
-        expect(res.json.calledWith(sinon.match({ message: `Server error: ${errorMessage}` }))).to.be.true;
-    });
-
-    it('should call student.find() with the correct query (Line 16)', async () => {
-        const req = { query: { adminNumber: '1234567A' } };
-        const res = {
-            status: sinon.stub().returnsThis(),
-            json: sinon.stub(),
-        };
-
-        const findStub = sinon.stub(student, 'find').resolves([]); // Simulate successful find
-
-        await readStudent(req, res);
-
-        expect(findStub.calledOnceWith({ adminNumber: '1234567A' })).to.be.true;
-    });
-
-    it('should return 404 if no students are found (Line 20)', async () => {
-        const req = { query: {} };
-        const res = {
-            status: sinon.stub().returnsThis(),
-            json: sinon.stub(),
-        };
-
-        sinon.stub(student, 'find').resolves([]); // Simulate no students found
-
-        await readStudent(req, res);
-
-        expect(res.status.calledWith(404)).to.be.true;
-        expect(res.json.calledWith({ message: 'No student records found' })).to.be.true;
-    });
-
-    it('should correctly format students and convert cGPA to string (Lines 28-29)', async () => {
-        const req = { query: {} };
-        const res = {
-            status: sinon.stub().returnsThis(),
-            json: sinon.stub(),
-        };
-
-        const mockStudents = [
-            {
-                adminNumber: '1234567A',
-                name: 'John Doe',
-                diploma: 'Information Technology',
-                cGPA: 3.5,
-                toObject: function () {
-                    return { ...this };
-                },
-            },
-        ];
-
-        sinon.stub(student, 'find').resolves(mockStudents);
-
-        await readStudent(req, res);
-
-        expect(res.status.calledWith(200)).to.be.true;
-
-        const responseData = res.json.getCall(0).args[0];
-        expect(responseData).to.be.an('array').with.length(1);
-        expect(responseData[0]).to.have.property('cGPA', '3.5');
-    });
-
-    it('should create a query object with searchName if provided', async () => {
-        const req = { query: { searchName: 'John' } };
-        const res = {
-            status: sinon.stub().returnsThis(),
-            json: sinon.stub(),
-        };
-    
-        const findStub = sinon.stub(student, 'find').resolves([]); // Simulate successful find
-    
-        await readStudent(req, res);
-    
-        expect(findStub.calledWith({ name: { $regex: 'John', $options: 'i' } })).to.be.true;
-    });
-
-    it('should create a query object with filterDiploma if provided', async () => {
-        const req = { query: { filterDiploma: 'Information Technology' } };
-        const res = {
-            status: sinon.stub().returnsThis(),
-            json: sinon.stub(),
-        };
-    
-        const findStub = sinon.stub(student, 'find').resolves([]); // Simulate successful find
-    
-        await readStudent(req, res);
-    
-        expect(findStub.calledWith({ diploma: 'Information Technology' })).to.be.true;
-    });
-
-    it('should sort students by CGPA if sortCGPA is provided', async () => {
-        const req = { query: { sortCGPA: 'asc' } };
-        const res = {
-            status: sinon.stub().returnsThis(),
-            json: sinon.stub(),
-        };
-    
-        const mockStudents = [
-            { adminNumber: '1234567A', name: 'John Doe', cGPA: 3.5, toObject: function () { return { ...this }; } },
-            { adminNumber: '2345678B', name: 'Jane Doe', cGPA: 3.8, toObject: function () { return { ...this }; } }
-        ];
-    
-        sinon.stub(student, 'find').resolves(mockStudents);
-    
-        await readStudent(req, res);
-    
-        const responseData = res.json.getCall(0).args[0];
-        expect(responseData[0].cGPA).to.equal('3.5');
-        expect(responseData[1].cGPA).to.equal('3.8');
-    });
-    it('should return 500 and log the error if student.find() fails', async () => {
-        const req = { query: {} };
-        const res = {
-            status: sinon.stub().returnsThis(),
-            json: sinon.stub(),
-        };
-    
-        const errorMessage = 'Database query failed';
-        sinon.stub(student, 'find').throws(new Error(errorMessage));
-    
-        await readStudent(req, res);
-    
-        expect(res.status.calledWith(500)).to.be.true;
-        expect(res.json.calledWith(sinon.match({ message: `Server error: ${errorMessage}` }))).to.be.true;
-    });
-    
-    it('should correctly format students and convert cGPA to string (Line 28)', async () => {
-        const req = { query: {} };
-        const res = {
-            status: sinon.stub().returnsThis(),
-            json: sinon.stub(),
-        };
-    
-        const mockStudents = [
-            {
-                adminNumber: '1234567A',
-                name: 'John Doe',
-                diploma: 'Information Technology',
-                cGPA: 3.5,
-                toObject: function () {
-                    return { ...this };
-                },
-            },
-        ];
-    
-        sinon.stub(student, 'find').resolves(mockStudents);
-    
-        await readStudent(req, res);
-    
-        // Check if the status is 200 OK
-        expect(res.status.calledWith(200)).to.be.true;
-    
-        // Get the formatted response data
-        const responseData = res.json.getCall(0).args[0];
-    
-        // Verify that the 'cGPA' field is converted to a string
-        expect(responseData[0]).to.have.property('cGPA').that.equals('3.5');
-    });
-
-    it('should sort students in descending order by CGPA when sortCGPA is "desc"', (done) => {
-        const mockStudents = [
-            {
-                adminNumber: '1234567A',
-                name: 'John Doe',
-                diploma: 'Information Technology',
-                cGPA: 3.5,
-                toObject: function () {
-                    return { ...this };
-                },
-            },
-            {
-                adminNumber: '2345678B',
-                name: 'Jane Smith',
-                diploma: 'Software Engineering',
-                cGPA: 3.8,
-                toObject: function () {
-                    return { ...this };
-                },
-            },
-        ];
-    
-        // Simulate the 'desc' sortCGPA query
-        const req = { query: { sortCGPA: 'desc' } };
-        const res = {
-            status: sinon.stub().returnsThis(),
-            json: sinon.stub(),
-        };
-    
-        // Stub the find method to return mock students
-        sinon.stub(student, 'find').resolves(mockStudents);
-    
         chai.request(baseUrl)
             .get('/read-student')
-            .query(req.query)
             .end((err, res) => {
-                expect(res).to.have.status(200);
-    
-                // Ensure that the CGPA sorting is applied in descending order
-                const sortedStudents = res.body;
-                expect(sortedStudents[0].cGPA).to.equal('3.8');
-                expect(sortedStudents[1].cGPA).to.equal('3.5');
+                expect(res).to.have.status(500);
+                expect(res.body).to.have.property('message').that.contains('File read failed');
                 done();
             });
     });
     
- });
+});

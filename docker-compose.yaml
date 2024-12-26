@@ -1,0 +1,10 @@
+version: '3.8'  # Specify the Compose file version
+services:
+  build-rms:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: locklaan/rms-docker-img:latest
+    container_name: rms-docker-container-lac
+    ports:
+      - "8000:5050"

@@ -1,21 +1,33 @@
-const Student = require('../models/Student');
-const fs = require('fs').promises;
-const mongoose = require('mongoose');
+const fs = require('fs').promises; // For working with file system asynchronously
 
 async function addStudent(req, res) {
     try {
         const { adminNumber, name, diploma, cGPA, image } = req.body;
 
-        const cGPADecimal = mongoose.Types.Decimal128.fromString(cGPA.toString());
+        // Read the existing students from the JSON file
+        const studentsData = await fs.readFile('studentdata.json', 'utf-8');
+        const students = JSON.parse(studentsData); // Parse the JSON data
 
-        const newStudent = new Student({ adminNumber, name, diploma, cGPA: cGPADecimal, image });
-        const savedStudent = await newStudent.save();
+        // Create a new student object
+        const newStudent = {
+            adminNumber,
+            name,
+            diploma,
+            cGPA: parseFloat(cGPA), // Convert cGPA to number
+            image
+        };
 
-        return res.status(201).json(savedStudent);
+        // Add the new student to the array
+        students.push(newStudent);
+
+        // Save the updated students array back to the JSON file
+        await fs.writeFile('studentdata.json', JSON.stringify(students, null, 2));
+
+        // Return the added student in the response
+        return res.status(201).json(newStudent);
     } catch (error) {
         return res.status(500).json({ message: error.message });
     }
 }
-module.exports = {
-    addStudent
-};
+
+module.exports = { addStudent };

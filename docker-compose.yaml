@@ -4,7 +4,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: locklaan/rms-docker-img:latest
-    container_name: rms-docker-container-lac
+    image: locklaan/lachlan-docker-img:latest
+    container_name: lachlan-docker-container
     ports:
       - "8000:5050"

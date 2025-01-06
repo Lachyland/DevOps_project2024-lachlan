@@ -19,25 +19,26 @@ jobs:
           node-version: 18
           
       - name: Remove existing node_modules folder from cloned project
-        run: rm -rf /home/runner/work/DevOps_project2024-lachlan/DevOps_project2024-lachlan/node_modules/*
+        run: rm -rf node_modules/*
         
-      - name: Install dependencies for based on package.json
+      - name: Install dependencies based on package.json
         run: npm install
         
-      - name: Run tests in "tests" folder
+      - name: Run backend tests
         run: npm run backend-test
         
       - name: Instrument the frontend code
         run: npm run frontend-instrument
        
-      - name: Run the frontend test cases
+      - name: Run frontend test cases
         run: npm run frontend-test
 
-build-and-deploy:
+  build-and-deploy:
     needs: test
     runs-on: ubuntu-latest
+    
     steps:
-      - name: Checkout code
+      - name: Checkout code from GitHub Repo
         uses: actions/checkout@v3
  
       - name: Login to DockerHub
@@ -64,8 +65,7 @@ build-and-deploy:
           az aks show --resource-group lachlanResourceGroup --name lachlanAKSCluster -o json >nul 2>nul || az aks create --resource-group lachlanResourceGroup --name lachlanAKSCluster --node-count 1 --generate-ssh-keys 2>&1
  
       - name: Get AKS credentials
-        run: |
-          az aks get-credentials --resource-group lachlanResourceGroup --name lachlanAKSCluster --overwrite-existing
+        run: az aks get-credentials --resource-group lachlanResourceGroup --name lachlanAKSCluster --overwrite-existing
  
       - name: Deploy to Kubernetes
         run: |

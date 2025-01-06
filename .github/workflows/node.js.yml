@@ -32,3 +32,48 @@ jobs:
        
       - name: Run the frontend test cases
         run: npm run frontend-test
+
+build-and-deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+ 
+      - name: Login to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_Username }}
+          password: ${{ secrets.DOCKER_password }}
+ 
+      - name: Build and Push Docker images
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          dockerfile: DockerFile
+          push: true
+          tags: ${{ secrets.DOCKER_Username }}/lachlan-docker-img:latest
+         
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+ 
+      - name: Set up AKS cluster
+        run: |
+          az aks show --resource-group lachlanResourceGroup --name lachlanAKSCluster -o json >nul 2>nul || az aks create --resource-group lachlanResourceGroup --name lachlanAKSCluster --node-count 1 --generate-ssh-keys 2>&1
+ 
+      - name: Get AKS credentials
+        run: |
+          az aks get-credentials --resource-group lachlanResourceGroup --name lachlanAKSCluster --overwrite-existing
+ 
+      - name: Deploy to Kubernetes
+        run: |
+          kubectl apply -f rms-deployment.yaml
+          kubectl apply -f rms-service.yaml
+ 
+      - name: Verify Deployment
+        run: |
+          kubectl rollout history deployment/lachlan-deployment
+          kubectl get pods
+          kubectl get services

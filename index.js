@@ -5,10 +5,14 @@ const Student = require('./models/Student');
 const cors = require('cors');
 const { readStudent } = require('./utils/read-util.js');
 require('dotenv').config();
+const logger = require('./logger');
 
 const app = express();
 const PORT = process.env.PORT || 5050;
 const startPage = "index.html";
+
+const statusMonitor = require('express-status-monitor');
+app.use(statusMonitor());
 
 mongoose.set('strictQuery', true);
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -79,6 +83,8 @@ const server = app.listen(PORT, function () {
     const address = server.address();
     const baseUrl = `http://${address.address == "::" ? 'localhost' : address.address}:${address.port}`;
     console.log(`project at: ${baseUrl}`);
+    logger.info(`Demo project at: ${baseUrl}!`);
+    logger.error(`Example or error log`)
 });
 
 module.exports = { app, server };

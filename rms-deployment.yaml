@@ -14,6 +14,6 @@ spec:
     spec:
       containers:
       - name: rms-container
-        image: locklaan/lachlan-docker-img:latest
+        image: locklaan/lachlan-docker-img:v4
         ports:
         - containerPort: 5050
